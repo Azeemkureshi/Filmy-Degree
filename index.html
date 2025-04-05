@@ -175,7 +175,7 @@
 <!-- Search Bar -->
 <div class="search-container">
     <input type="text" class="search-box" id="search" placeholder="Search Movies..." onkeyup="searchMovies()">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhMU_U1U48E_DDp0t5Ajd3rt4-9NruJvZ1qZyWuCTqbTvPGc8Gag5CJ8-KoSM6S-NGyKyNyIe4P2QzZqHXFrYTk6EpxHGNtvU7-qaSwbnJhtXpvriobmhJ13fxDqIQv4MTZZNI2eWazgwaWMBuML-kmmmVisKOIdMpjaetft1j8uoyYqR2CaXsVOyzDum/s256/1000342000.png" class="search-icon" alt="Search">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhOa_nT_Mrpk4OwwuEy6VrQ1Y_jWsQp0zFhe_aFKCfr81fEFsdJN6EjzpLaXJSa1TSF9RYFNON_cfB04_qq5IaDTLZFnKxhqtNO3JyZnrC8ngUClFCLf5VA57PP_D-n2ZU_AVNdZDgFWpBtzlAxpiWHM-ats7kQhQO-7abB6f66OMj22uhitu8RXQ0Ybg0/s3264/1000342240.jpg" class="search-icon" alt="Search">
 </div>
 
 <!-- No Results Found Message -->
@@ -197,7 +197,7 @@
 
         <!-- Modal Ad iframe -->
         <div id="modalAd">
-            <iframe class="ad-iframe" src="Link"></iframe>
+            <iframe class="ad-iframe" src="https://azeemkureshi.github.io/website/"></iframe>
         </div>
 
         <div class="buttons">
@@ -210,9 +210,11 @@
 
 <script>
     const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
+    const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
     const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
+
     const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
-    const AD_URL = "https://raw.githubusercontent.com/Azeemkureshi/Shorturl/refs/heads/main/ads.json";
+    const AD_URL = `https://sheets.googleapis.com/v4/spreadsheets/${AD_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
 
     let movieData = [];
     let adsData = [];
@@ -223,17 +225,8 @@
             const movieDataJson = await movieResponse.json();
             const adDataJson = await adResponse.json();
 
-            if (movieDataJson.values && movieDataJson.values.length > 1) {
-                movieData = movieDataJson.values.slice(1).map(row => ({
-                    title: row[0],
-                    imageUrl: row[1],
-                    watchLink: row[2],
-                    downloadLink: row[3],
-                    genre: row[4] || "Unknown"
-                }));
-            }
-
-            adsData = adDataJson.ads || [];
+            movieData = movieDataJson.values.slice(1);
+            adsData = adDataJson.values.slice(1);
 
             displayMovies(movieData);
         } catch (error) {
@@ -242,7 +235,11 @@
     }
 
     function getRandomAd() {
-        return adsData.length > 0 ? adsData[Math.floor(Math.random() * adsData.length)] : null;
+        if (adsData.length > 0) {
+            let randomIndex = Math.floor(Math.random() * adsData.length);
+            return adsData[randomIndex];
+        }
+        return null;
     }
 
     function displayMovies(movies) {
@@ -250,17 +247,19 @@
         movieContainer.innerHTML = "";
 
         movies.forEach((movie, index) => {
-            let { title, imageUrl, watchLink, downloadLink, genre } = movie;
+            let [title, imageUrl, watchLink, downloadLink, genre] = movie;
 
             let movieDiv = document.createElement("div");
             movieDiv.classList.add("movie");
             movieDiv.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', '${downloadLink}', '${genre}')">`;
             movieContainer.appendChild(movieDiv);
 
+            // Every 5 movies, insert a random ad
             if ((index + 1) % 5 === 0) {
                 let randomAd = getRandomAd();
                 if (randomAd) {
-                    let { adImage, adLink } = randomAd;
+                    let [adImage, adLink] = randomAd;
+
                     let adDiv = document.createElement("div");
                     adDiv.classList.add("movie");
                     adDiv.innerHTML = `<a href="${adLink}" target="_blank"><img src="${adImage}" alt="Ad"></a>`;
@@ -273,17 +272,8 @@
     }
 
     function searchMovies() {
-        let query = document.getElementById("search").value.toLowerCase().trim();
-        if (query === "") {
-            displayMovies(movieData);
-            return;
-        }
-
-        let filteredMovies = movieData.filter(movie => 
-            movie.title.toLowerCase().includes(query) || 
-            (movie.genre && movie.genre.toLowerCase().includes(query))
-        );
-
+        let query = document.getElementById("search").value.toLowerCase();
+        let filteredMovies = movieData.filter(movie => movie[0].toLowerCase().includes(query));
         displayMovies(filteredMovies);
     }
 
@@ -293,13 +283,15 @@
         document.getElementById("modalGenre").textContent = genre;
         document.getElementById("watchLink").href = watchLink;
 
+        // Random Ad inside modal
         let randomAd = getRandomAd();
         if (randomAd) {
-            let { adImage, adLink } = randomAd;
+            let [adImage, adLink] = randomAd;
             document.getElementById("modalAd").innerHTML = `<a href="${adLink}" target="_blank"><img src="${adImage}" style="width:100%;border-radius:10px;"></a>`;
         }
 
-        fetch(`https://nanolinks/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${downloadLink}`)
+        // Shorten download link
+        fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${downloadLink}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById("downloadLink").href = data.shortenedUrl;
@@ -308,14 +300,14 @@
                 document.getElementById("downloadLink").href = downloadLink;
             });
 
+        // Show modal
         document.getElementById("movieModal").style.display = "flex";
     }
 
     function closeModal() {
         document.getElementById("movieModal").style.display = "none";
-    }
-
-    window.onload = fetchMoviesAndAds;
+    } 
+    fetchMoviesAndAds();
 </script>
 
 </body>
