@@ -300,7 +300,7 @@
             document.getElementById("modalAd").innerHTML = `<a href="${adLink}" target="_blank"><img src="${adImage}" style="width:100%;border-radius:10px;"></a>`;
         }
 
-        fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${downloadLink}`)
+        fetch(`https://nanolinks/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${downloadLink}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById("downloadLink").href = data.shortenedUrl;
