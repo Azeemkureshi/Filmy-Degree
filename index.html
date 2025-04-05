@@ -1,1 +1,323 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* SEARCH BAR */
+        .search-container {
+            position: fixed;
+            top: 0px;
+            left: 0;
+            width: 95%;
+            padding: 10px;
+            background: transparent;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .search-box {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            outline: none;
+        }
+        .search-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: -40px;
+            cursor: pointer;
+        }
+
+        /* MOVIE GRID */
+        .movie-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        .movie {
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .movie img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+        /* NO RESULTS FOUND */
+        #noResults {
+            display: none;
+            text-align: center;
+            margin-top: 100px;
+        }
+        #noResults img {
+            width: 150px;
+            display: block;
+            margin: 0 auto;
+        }
+        #noResults h2 {
+            margin: 10px 0;
+            text-align: center;
+        }
+        #noResults p {
+            text-align: center;
+        }
+
+        /* POPUP MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in-out; /* Added animation */
+        }
+        .modal-content {
+            background: #222;
+            padding: 15px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out; /* Added animation */
+        }
+        .modal img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .modal h2 {
+            margin: 10px 0 5px;
+        }
+        .modal p {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .watch {
+            background: #00d4aa;
+            color: white;
+        }
+        .download {
+            background: white;
+            color: black;
+        }
+        .close {
+            margin-top: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #ff5c5c;
+        }
+
+        /* ADS */
+        .ad-iframe {
+            width: 100%;
+            max-width: 800px;
+            height: 80px;
+            border: none;
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Added Animation Keyframes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+<!-- Search Bar -->
+<div class="search-container">
+    <input type="text" class="search-box" id="search" placeholder="Search Movies..." onkeyup="searchMovies()">
+    <img src="https://www.iconsdb.com/icons/preview/white/search-13-xxl.png" class="search-icon" alt="Search">
+</div>
+
+<!-- No Results Found Message -->
+<div id="noResults">
+    <img src="https://rukminim3.flixcart.com/www/850/400/promos/04/05/2018/3a392fd0-0a11-4135-b24a-837ae11740ff.png?q=90" alt="No Results">
+    <h2>Result Not Found</h2>
+    <p>This Movie is not available</p>
+</div>
+
+<!-- Movies Grid -->
+<div class="movie-container" id="movies"></div>
+
+<!-- Movie Popup Modal -->
+<div class="modal" id="movieModal">
+    <div class="modal-content">
+        <img id="modalImage" src="" alt="">
+        <h2 id="modalTitle"></h2>
+        <p id="modalGenre"></p>
+
+        <!-- Modal Ad iframe -->
+        <div id="modalAd">
+            <iframe class="ad-iframe" src="https://azeemkureshi.github.io/website/"></iframe>
+        </div>
+
+        <div class="buttons">
+            <a id="watchLink" class="btn watch" target="_blank">WATCH NOW</a>
+            <a id="downloadLink" class="btn download" target="_blank">DOWNLOAD</a>
+        </div>
+        <div class="close" onclick="closeModal()">Close</div>
+    </div>
+</div>
+
+<script>
+    const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
+    const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
+    const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+    const AD_URL = "https://raw.githubusercontent.com/Azeemkureshi/Shorturl/refs/heads/main/ads.json";
+
+    let movieData = [];
+    let adsData = [];
+
+    async function fetchMoviesAndAds() {
+        try {
+            const [movieResponse, adResponse] = await Promise.all([fetch(MOVIE_URL), fetch(AD_URL)]);
+            const movieDataJson = await movieResponse.json();
+            const adDataJson = await adResponse.json();
+
+            if (movieDataJson.values && movieDataJson.values.length > 1) {
+                movieData = movieDataJson.values.slice(1).map(row => ({
+                    title: row[0],
+                    imageUrl: row[1],
+                    watchLink: row[2],
+                    downloadLink: row[3],
+                    genre: row[4] || "Unknown"
+                }));
+            }
+
+            adsData = adDataJson.ads || [];
+
+            displayMovies(movieData);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    function getRandomAd() {
+        return adsData.length > 0 ? adsData[Math.floor(Math.random() * adsData.length)] : null;
+    }
+
+    function displayMovies(movies) {
+        let movieContainer = document.getElementById("movies");
+        movieContainer.innerHTML = "";
+
+        movies.forEach((movie, index) => {
+            let { title, imageUrl, watchLink, downloadLink, genre } = movie;
+
+            let movieDiv = document.createElement("div");
+            movieDiv.classList.add("movie");
+            movieDiv.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', '${downloadLink}', '${genre}')">`;
+            movieContainer.appendChild(movieDiv);
+
+            if ((index + 1) % 5 === 0) {
+                let randomAd = getRandomAd();
+                if (randomAd) {
+                    let { adImage, adLink } = randomAd;
+                    let adDiv = document.createElement("div");
+                    adDiv.classList.add("movie");
+                    adDiv.innerHTML = `<a href="${adLink}" target="_blank"><img src="${adImage}" alt="Ad"></a>`;
+                    movieContainer.appendChild(adDiv);
+                }
+            }
+        });
+
+        document.getElementById("noResults").style.display = movies.length === 0 ? "block" : "none";
+    }
+
+    function searchMovies() {
+        let query = document.getElementById("search").value.toLowerCase().trim();
+        if (query === "") {
+            displayMovies(movieData);
+            return;
+        }
+
+        let filteredMovies = movieData.filter(movie => 
+            movie.title.toLowerCase().includes(query) || 
+            (movie.genre && movie.genre.toLowerCase().includes(query))
+        );
+
+        displayMovies(filteredMovies);
+    }
+
+    function openModal(title, imageUrl, watchLink, downloadLink, genre) {
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalImage").src = imageUrl;
+        document.getElementById("modalGenre").textContent = genre;
+        document.getElementById("watchLink").href = watchLink;
+
+        let randomAd = getRandomAd();
+        if (randomAd) {
+            let { adImage, adLink } = randomAd;
+            document.getElementById("modalAd").innerHTML = `<a href="${adLink}" target="_blank"><img src="${adImage}" style="width:100%;border-radius:10px;"></a>`;
+        }
+
+        fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${downloadLink}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("downloadLink").href = data.shortenedUrl;
+            })
+            .catch(() => {
+                document.getElementById("downloadLink").href = downloadLink;
+            });
+
+        document.getElementById("movieModal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("movieModal").style.display = "none";
+    }
+
+    window.onload = fetchMoviesAndAds;
+</script>
+
+</body>
+</html>
