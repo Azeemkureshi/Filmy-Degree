@@ -44,13 +44,49 @@
       margin-left: -40px;
       cursor: pointer;
     }
+    .category-container {
+      position: sticky;
+      top: 54px; /* सर्च बार के ठीक नीचे */
+      left: 0;
+      width: 98%;
+      padding: 5px 0;
+      background: #121212;
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      z-index: 900;
+      transition: opacity 0.3s ease;
+    }
+    .category-container.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .category-container::-webkit-scrollbar {
+      display: none;
+    }
+    .category-btn {
+      padding: 6px 15px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.3s ease;
+      background-color: #ff0000;
+      color: white;
+      margin: 0 5px;
+      white-space: nowrap;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    .category-btn:hover {
+      transform: scale(1.05);
+    }
     .movie-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
       width: 100%;
       max-width: 800px;
-      margin-top: 60px;
+      margin-top: 50px;
     }
     .movie {
       border-radius: 10px;
@@ -69,7 +105,7 @@
     #noResults {
       display: none;
       text-align: center;
-      margin-top: 100px;
+      margin-top: 110px;
     }
     #noResults img {
       width: 150px;
@@ -77,7 +113,7 @@
       margin: 0 auto;
     }
     #loading {
-      margin-top: 80px;
+      margin-top: 110px;
       font-size: 16px;
       color: #aaa;
     }
@@ -156,11 +192,28 @@
       background: #000;
       padding: 0;
       width: 100%;
+      max-width: 1200px; /* Limit max width for larger screens */
       height: 100%;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      justify-content: center; /* Horizontally center */
+      align-items: center; /* Vertically center */
       animation: fadeIn 0.3s ease;
+    }
+    .iframe-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px; /* Desired iframe width */
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+    }
+    iframe.watch-frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px; /* Optional: Rounded corners */
     }
     .download-buttons {
       display: flex;
@@ -171,13 +224,6 @@
     .download-buttons .btn {
       border-radius: 10px;
     }
-    iframe.watch-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 0;
-      flex: 1;
-    }
     @keyframes scaleIn {
       from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -186,190 +232,238 @@
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
     }
+    /* कैटेगरी बटन के लिए अलग-अलग रंग */
+    .category-btn:nth-child(1) { background-color: #ff0000; } /* ACTION */
+    .category-btn:nth-child(2) { background-color: #ffd700; } /* COMEDY */
+    .category-btn:nth-child(3) { background-color: #00ff00; } /* DRAMA */
+    .category-btn:nth-child(4) { background-color: #ffa500; } /* ROMA */
+    .category-btn:nth-child(5) { background-color: #800080; } /* 2025 */
   </style>
 </head>
 <body>
+  <div class="search-container">
+    <input type="text" class="search-box" id="search" placeholder="Search Movies..." onkeyup="searchMovies()"/>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhMU_U1U48E_DDp0t5Ajd3rt4-9NruJvZ1qZyWuCTqbTvPGc8Gag5CJ8-KoSM6S-NGyKyNyIe4P2QzZqHXFrYTk6EpxHGNtvU7-qaSwbnJhtXpvriobmhJ13fxDqIQv4MTZZNI2eWazgwaWMBuML-kmmmVisKOIdMpjaetft1j8uoyYqR2CaXsVOyzDum/s256/1000342000.png" class="search-icon" alt="Search"/>
+  </div>
 
-<div class="search-container">
-  <input type="text" class="search-box" id="search" placeholder="Search Movies..." onkeyup="searchMovies()"/>
-  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhMU_U1U48E_DDp0t5Ajd3rt4-9NruJvZ1qZyWuCTqbTvPGc8Gag5CJ8-KoSM6S-NGyKyNyIe4P2QzZqHXFrYTk6EpxHGNtvU7-qaSwbnJhtXpvriobmhJ13fxDqIQv4MTZZNI2eWazgwaWMBuML-kmmmVisKOIdMpjaetft1j8uoyYqR2CaXsVOyzDum/s256/1000342000.png" class="search-icon" alt="Search"/>
-</div>
+  <div class="category-container">
+    <button class="category-btn" onclick="filterMovies('ACTION')">ACTION</button>
+    <button class="category-btn" onclick="filterMovies('COMEDY')">COMEDY</button>
+    <button class="category-btn" onclick="filterMovies('DRAMA')">DRAMA</button>
+    <button class="category-btn" onclick="filterMovies('ROMA')">ROMA</button>
+    <button class="category-btn" onclick="filterMovies('2025')">2025</button>
+  </div>
 
-<div id="loading">Loading movies...</div>
+  <div id="loading">Loading movies...</div>
 
-<div id="noResults">
-  <img src="https://rukminim3.flixcart.com/www/850/400/promos/04/05/2018/3a392fd0-0a11-4135-b24a-837ae11740ff.png?q=90" alt="No Results"/>
-  <h2>Result Not Found</h2>
-  <p>This Movie is not available</p>
-</div>
+  <div id="noResults">
+    <img src="https://rukminim3.flixcart.com/www/850/400/promos/04/05/2018/3a392fd0-0a11-4135-b24a-837ae11740ff.png?q=90" alt="No Results"/>
+    <h2>Result Not Found</h2>
+    <p>This Movie is not available</p>
+  </div>
 
-<div class="movie-container" id="movies"></div>
+  <div class="movie-container" id="movies"></div>
 
-<div class="modal" id="movieModal">
-  <div class="modal-content">
-    <img id="modalImage" src="" alt=""/>
-    <h2 id="modalTitle"></h2>
-    <p id="modalGenre"></p>
-    <div id="modalAd"></div>
-    <div class="buttons">
-      <button class="btn watch" onclick="openWatchPopup()">WATCH NOW</button>
-      <button class="btn download" onclick="toggleQualityPopup()">DOWNLOAD</button>
+  <div class="modal" id="movieModal">
+    <div class="modal-content">
+      <img id="modalImage" src="" alt=""/>
+      <h2 id="modalTitle"></h2>
+      <p id="modalGenre"></p>
+      <div id="modalAd"></div>
+      <div class="buttons">
+        <button class="btn watch" onclick="openWatchPopup()">WATCH NOW</button>
+        <button class="btn download" onclick="toggleQualityPopup()">DOWNLOAD</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="qualityPopup" class="quality-modal">
-  <div class="quality-content">
-    <h3>SELECT DOWNLOAD QUALITY</h3>
-    <div class="download-buttons">
-      <a id="download480p" class="btn download" target="blank">DOWNLOAD LiNK 480P<a>
-      <a id="download720p" class="btn download" target="blank">DOWNLOAD LiNK 720P<a>
-      <a id="download1080p" class="btn download" target="blank">DOWNLOAD LiNK 1080P<a>
+  <div id="qualityPopup" class="quality-modal">
+    <div class="quality-content">
+      <h3>SELECT DOWNLOAD QUALITY</h3>
+      <div class="download-buttons">
+        <a id="download480p" class="btn download" target="_blank">DOWNLOAD LINK 480P</a>
+        <a id="download720p" class="btn download" target="_blank">DOWNLOAD LINK 720P</a>
+        <a id="download1080p" class="btn download" target="_blank">DOWNLOAD LINK 1080P</a>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="watchPopup" class="watch-modal">
-  <div class="watch-content">
-    <iframe id="watchIframe" class="watch-frame" allow="fullscreen" allowfullscreen></iframe>
+  <div id="watchPopup" class="watch-modal">
+    <div class="watch-content">
+      <div class="iframe-wrapper">
+        <iframe id="watchIframe" class="watch-frame" allow="fullscreen" allowfullscreen></iframe>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-  const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
-  const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
-  const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
-  const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
-  const AD_URL = `https://sheets.googleapis.com/v4/spreadsheets/${AD_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+  <script>
+    const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
+    const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
+    const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
+    const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+    const AD_URL = `https://sheets.googleapis.com/v4/spreadsheets/${AD_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
 
-  let movieData = [];
-  let adsData = [];
-  let currentWatchUrl = "";
+    let movieData = [];
+    let adsData = [];
+    let currentWatchUrl = "";
 
-  async function fetchMoviesAndAds() {
-    try {
-      const [movieResponse, adResponse] = await Promise.all([
-        fetch(MOVIE_URL),
-        fetch(AD_URL)
-      ]);
-      const movieDataJson = await movieResponse.json();
-      const adDataJson = await adResponse.json();
-      movieData = movieDataJson.values.slice(1);
-      adsData = adDataJson.values.slice(1);
-      displayMovies(movieData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
-
-  function getRandomAd() {
-    if (adsData.length > 0) {
-      let index = Math.floor(Math.random() * adsData.length);
-      return adsData[index];
-    }
-    return null;
-  }
-
-  function displayMovies(movies) {
-    const container = document.getElementById("movies");
-    container.innerHTML = "";
-    document.getElementById("loading").style.display = "none";
-
-    movies.forEach((movie, index) => {
-      let [title, imageUrl, watchLink, downloadLinks, genre] = movie;
-
-      let div = document.createElement("div");
-      div.classList.add("movie");
-      div.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', \`${downloadLinks}\`, '${genre}')">`;
-      container.appendChild(div);
-
-      if ((index + 1) % 5 === 0) {
-        const ad = getRandomAd();
-        if (ad) {
-          const [img, link] = ad;
-          let adDiv = document.createElement("div");
-          adDiv.classList.add("movie");
-          adDiv.innerHTML = `<a href="${link}" target="_blank"><img src="${img}" alt="Ad"></a>`;
-          container.appendChild(adDiv);
-        }
+    async function fetchMoviesAndAds() {
+      try {
+        const [movieResponse, adResponse] = await Promise.all([
+          fetch(MOVIE_URL),
+          fetch(AD_URL)
+        ]);
+        const movieDataJson = await movieResponse.json();
+        const adDataJson = await adResponse.json();
+        movieData = movieDataJson.values.slice(1);
+        adsData = adDataJson.values.slice(1);
+        displayMovies(movieData);
+        setupScrollObserver(); // स्क्रॉल ऑब्जर्वर सेटअप
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
+    }
+
+    function getRandomAd() {
+      if (adsData.length > 0) {
+        let index = Math.floor(Math.random() * adsData.length);
+        return adsData[index];
+      }
+      return null;
+    }
+
+    function displayMovies(movies) {
+      const container = document.getElementById("movies");
+      container.innerHTML = "";
+      document.getElementById("loading").style.display = "none";
+
+      movies.forEach((movie, index) => {
+        let [title, imageUrl, watchLink, downloadLinks, genre] = movie;
+
+        let div = document.createElement("div");
+        div.classList.add("movie");
+        div.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', \`${downloadLinks}\`, '${genre}')">`;
+        container.appendChild(div);
+
+        if ((index + 1) % 5 === 0) {
+          const ad = getRandomAd();
+          if (ad) {
+            const [img, link] = ad;
+            let adDiv = document.createElement("div");
+            adDiv.classList.add("movie");
+            adDiv.innerHTML = `<a href="${link}" target="_blank"><img src="${img}" alt="Ad"></a>`;
+            container.appendChild(adDiv);
+          }
+        }
+      });
+
+      document.getElementById("noResults").style.display = movies.length === 0 ? "block" : "none";
+    }
+
+    function searchMovies() {
+      let q = document.getElementById("search").value.toLowerCase();
+      let filtered = movieData.filter(m => m[0].toLowerCase().includes(q));
+      displayMovies(filtered);
+    }
+
+    function filterMovies(category) {
+      let filtered = movieData.filter(m => m[4].toUpperCase() === category);
+      displayMovies(filtered);
+    }
+
+    function toggleQualityPopup(show) {
+      const popup = document.getElementById("qualityPopup");
+      if (show === false || popup.style.display === "flex") {
+        popup.style.display = "none";
+        if (history.state && history.state.qualityOpen) history.back();
+      } else {
+        popup.style.display = "flex";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        history.pushState({ qualityOpen: true }, "");
+      }
+    }
+
+    function openModal(title, imageUrl, watchLink, downloadLinks, genre) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalImage").src = imageUrl;
+      document.getElementById("modalGenre").textContent = genre;
+      currentWatchUrl = watchLink;
+      document.getElementById("qualityPopup").style.display = "none";
+
+      let ad = getRandomAd();
+      if (ad) {
+        const [img, link] = ad;
+        document.getElementById("modalAd").innerHTML = `<a href="${link}" target="_blank"><img src="${img}" style="width:100%;border-radius:10px;"></a>`;
+      }
+
+      let [l480, l720, l1080] = downloadLinks.split("|");
+      shortenAndSetLink(l480, "download480p");
+      shortenAndSetLink(l720, "download720p");
+      shortenAndSetLink(l1080, "download1080p");
+
+      document.getElementById("movieModal").style.display = "flex";
+      history.pushState({ modalOpen: true }, "");
+    }
+
+    function openWatchPopup() {
+      document.getElementById("watchIframe").src = currentWatchUrl;
+      document.getElementById("watchPopup").style.display = "flex";
+      confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+      history.pushState({ watchOpen: true }, "");
+    }
+
+    function shortenAndSetLink(originalUrl, elementId) {
+      fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
+        })
+        .catch(() => {
+          document.getElementById(elementId).href = originalUrl;
+        });
+    }
+
+    window.addEventListener("popstate", () => {
+      document.getElementById("movieModal").style.display = "none";
+      document.getElementById("qualityPopup").style.display = "none";
+      document.getElementById("watchPopup").style.display = "none";
+      document.getElementById("watchIframe").src = "";
     });
 
-    document.getElementById("noResults").style.display = movies.length === 0 ? "block" : "none";
-  }
+    window.addEventListener("click", function(e) {
+      if (e.target.id === "movieModal") history.back();
+      if (e.target.id === "qualityPopup") history.back();
+      if (e.target.id === "watchPopup") history.back();
+    });
 
-  function searchMovies() {
-    let q = document.getElementById("search").value.toLowerCase();
-    let filtered = movieData.filter(m => m[0].toLowerCase().includes(q));
-    displayMovies(filtered);
-  }
+    function setupScrollObserver() {
+      const categorySection = document.querySelector('.category-container');
+      const movieContainer = document.querySelector('.movie-container');
 
-  function toggleQualityPopup(show) {
-    const popup = document.getElementById("qualityPopup");
-    if (show === false || popup.style.display === "flex") {
-      popup.style.display = "none";
-      if (history.state && history.state.qualityOpen) history.back();
-    } else {
-      popup.style.display = "flex";
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      history.pushState({ qualityOpen: true }, "");
-    }
-  }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.boundingClientRect.top >= 0) {
+            categorySection.classList.remove('hidden'); // मूवी सेक्शन ऊपर है, दिखाओ
+          } else {
+            categorySection.classList.add('hidden'); // मूवी सेक्शन नीचे स्क्रॉल हुआ, छुपाओ
+          }
+        });
+      }, { threshold: 0 });
 
-  function openModal(title, imageUrl, watchLink, downloadLinks, genre) {
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("modalImage").src = imageUrl;
-    document.getElementById("modalGenre").textContent = genre;
-    currentWatchUrl = watchLink;
-    document.getElementById("qualityPopup").style.display = "none";
+      observer.observe(movieContainer);
 
-    let ad = getRandomAd();
-    if (ad) {
-      const [img, link] = ad;
-      document.getElementById("modalAd").innerHTML = `<a href="${link}" target="_blank"><img src="${img}" style="width:100%;border-radius:10px;"></a>`;
-    }
-
-    let [l480, l720, l1080] = downloadLinks.split("|");
-    shortenAndSetLink(l480, "download480p");
-    shortenAndSetLink(l720, "download720p");
-    shortenAndSetLink(l1080, "download1080p");
-
-    document.getElementById("movieModal").style.display = "flex";
-    history.pushState({ modalOpen: true }, "");
-  }
-
-  function openWatchPopup() {
-    document.getElementById("watchIframe").src = currentWatchUrl;
-    document.getElementById("watchPopup").style.display = "flex";
-    confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
-    history.pushState({ watchOpen: true }, "");
-  }
-
-  function shortenAndSetLink(originalUrl, elementId) {
-    fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
-      })
-      .catch(() => {
-        document.getElementById(elementId).href = originalUrl;
+      // बैकअप के लिए स्क्रॉल इवेंट
+      window.addEventListener('scroll', () => {
+        const movieTop = movieContainer.getBoundingClientRect().top;
+        if (movieTop >= 0) {
+          categorySection.classList.remove('hidden');
+        } else {
+          categorySection.classList.add('hidden');
+        }
       });
-  }
+    }
 
-  window.addEventListener("popstate", () => {
-    document.getElementById("movieModal").style.display = "none";
-    document.getElementById("qualityPopup").style.display = "none";
-    document.getElementById("watchPopup").style.display = "none";
-    document.getElementById("watchIframe").src = "";
-  });
-
-  window.addEventListener("click", function(e) {
-    if (e.target.id === "movieModal") history.back();
-    if (e.target.id === "qualityPopup") history.back();
-    if (e.target.id === "watchPopup") history.back();
-  });
-
-  fetchMoviesAndAds();
-</script>
+    fetchMoviesAndAds();
+  </script>
 </body>
 </html>
