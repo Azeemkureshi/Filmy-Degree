@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Movie Website</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -46,7 +49,7 @@
     }
     .category-container {
       position: sticky;
-      top: 54px; /* सर्च बार के ठीक नीचे */
+      top: 54px;
       left: 0;
       width: 98%;
       padding: 5px 0;
@@ -117,7 +120,7 @@
       font-size: 16px;
       color: #aaa;
     }
-    .modal, .quality-modal, .watch-modal {
+    .modal, .quality-modal, .watch-modal, .live-tv-modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
@@ -192,18 +195,18 @@
       background: #000;
       padding: 0;
       width: 100%;
-      max-width: 1200px; /* Limit max width for larger screens */
+      max-width: 1200px;
       height: 100%;
       display: flex;
-      justify-content: center; /* Horizontally center */
-      align-items: center; /* Vertically center */
+      justify-content: center;
+      align-items: center;
       animation: fadeIn 0.3s ease;
     }
     .iframe-wrapper {
       position: relative;
       width: 100%;
-      max-width: 800px; /* Desired iframe width */
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      max-width: 800px;
+      padding-bottom: 56.25%;
       height: 0;
     }
     iframe.watch-frame {
@@ -213,7 +216,7 @@
       width: 100%;
       height: 100%;
       border: none;
-      border-radius: 8px; /* Optional: Rounded corners */
+      border-radius: 8px;
     }
     .download-buttons {
       display: flex;
@@ -224,6 +227,162 @@
     .download-buttons .btn {
       border-radius: 10px;
     }
+    .live-tv-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .live-tv-content {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: scaleIn 0.3s ease;
+    }
+    .fin {
+      width: 90%;
+      margin: 10px auto;
+      height: 40px;
+      font-size: 16px;
+      background-color: rgb(40, 40, 40);
+      color: white;
+      border-radius: 10px;
+      border: 3px solid rgb(0, 200, 200);
+      outline: none;
+      text-align: center;
+      padding: 0 10px;
+      transition: all 0.3s ease;
+    }
+    .fin:hover {
+      border: 3px solid rgb(255, 60, 140);
+      color: white;
+      background: black;
+    }
+    .category-filter {
+      margin: 0px auto;
+      width: 100%;
+      text-align: center;
+    }
+    .category-filter select {
+      padding: 5px;
+      font-size: 16px;
+      background: #222;
+      color: white;
+      border: 2px solid rgb(0, 200, 200);
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      width: 300px;
+      display: inline-block;
+    }
+    .category-filter select:hover {
+      border-color: rgb(255, 60, 140);
+    }
+    .channel-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+      background: #1a1a1a;
+    }
+    .channel-item {
+      position: relative;
+      width: calc(50.50% - 20px);
+      margin: 2px;
+      border: 3px solid rgb(0, 200, 200);
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+    .channel-item:hover {
+      border-color: rgb(255, 60, 140);
+      transform: scale(1.05);
+    }
+    .channel-item img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      pointer-events: none;
+      display: block;
+    }
+    .channel-name {
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: white;
+      background: #222;
+      word-wrap: break-word;
+    }
+    #loadingMessage, #noChannelsMessage {
+      display: none;
+      text-align: center;
+      font-size: 18px;
+      color: rgb(0, 200, 200);
+      margin-top: 20px;
+    }
+    #loadingMessage {
+      display: block; /* Show by default until channels load */
+    }
+    .video-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+    .video-popup-content {
+      background: #000;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 800px;
+      width: 90%;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .video-popup video {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      background: black;
+      box-shadow: 0 5px 5px #000;
+      object-fit: contain; /* Ensure poster image fits properly */
+    }
+    .video-popup .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     @keyframes scaleIn {
       from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -232,12 +391,11 @@
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
     }
-    /* कैटेगरी बटन के लिए अलग-अलग रंग */
-    .category-btn:nth-child(1) { background-color: #ff0000; } /* ACTION */
-    .category-btn:nth-child(2) { background-color: #ffd700; } /* COMEDY */
-    .category-btn:nth-child(3) { background-color: #00ff00; } /* DRAMA */
-    .category-btn:nth-child(4) { background-color: #ffa500; } /* ROMA */
-    .category-btn:nth-child(5) { background-color: #800080; } /* 2025 */
+    .category-btn:nth-child(1) { background-color: #ff0000; }
+    .category-btn:nth-child(2) { background-color: #ffd700; }
+    .category-btn:nth-child(3) { background-color: #00ff00; }
+    .category-btn:nth-child(4) { background-color: #ffa500; }
+    .category-btn:nth-child(5) { background-color: #800080; }
   </style>
 </head>
 <body>
@@ -247,7 +405,7 @@
   </div>
 
   <div class="category-container">
-    <button class="category-btn" onclick="filterMovies('ACTION')">ACTION</button>
+    <button class="category-btn" onclick="openLiveTvPopup()">Live TV</button>
     <button class="category-btn" onclick="filterMovies('COMEDY')">COMEDY</button>
     <button class="category-btn" onclick="filterMovies('DRAMA')">DRAMA</button>
     <button class="category-btn" onclick="filterMovies('ROMA')">ROMA</button>
@@ -296,6 +454,31 @@
     </div>
   </div>
 
+  <div id="liveTvPopup" class="live-tv-modal">
+    <div class="live-tv-content">
+      <input class="fin" id="liveTvSearch" placeholder="Search Channel here..." type="text" />
+      <div class="category-filter">
+        <select id="categoryFilter">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+      <div id="loadingMessage">Please Wait...</div>
+      <div id="noChannelsMessage">Channel Not Available</div>
+      <div class="channel-grid" id="channelList"></div>
+    </div>
+  </div>
+
+  <div id="videoPopup" class="video-popup">
+    <div class="video-popup-content">
+      <button class="close-btn" onclick="closeVideoPopup()">×</button>
+      <video id="videoPlayer" controls autoplay>
+        <source id="videoSource" src="" type="application/x-mpegURL">
+        आपका ब्राउज़र वीडियो टैग को सपोर्ट नहीं करता।
+      </video>
+    </div>
+  </div>
+
+  <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
   <script>
     const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
     const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
@@ -318,7 +501,7 @@
         movieData = movieDataJson.values.slice(1);
         adsData = adDataJson.values.slice(1);
         displayMovies(movieData);
-        setupScrollObserver(); // स्क्रॉल ऑब्जर्वर सेटअप
+        setupScrollObserver();
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -423,17 +606,187 @@
         });
     }
 
-    window.addEventListener("popstate", () => {
+    // Live TV Channels
+    const playlistUrl = "https://iptv-org.github.io/iptv/index.m3u";
+    let allChannels = [];
+    let categories = new Set();
+
+    async function loadPlaylist() {
+      try {
+        const res = await fetch(playlistUrl);
+        const text = await res.text();
+        const lines = text.split("\n");
+        let name = "", logo = "", url = "", category = "other";
+
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith("#EXTINF")) {
+            name = lines[i].split(",")[1] || "Channel";
+            const logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
+            logo = logoMatch ? logoMatch[1] : "https://via.placeholder.com/200x300";
+            const categoryMatch = lines[i].match(/group-title="([^"]*)"/);
+            category = categoryMatch ? categoryMatch[1] : "other";
+            categories.add(category);
+          } else if (lines[i].startsWith("http")) {
+            url = lines[i];
+            allChannels.push({ name, logo, url, category });
+          }
+        }
+        populateCategoryDropdown();
+        displayChannels(allChannels, "all");
+        $("#loadingMessage").hide();
+      } catch (error) {
+        console.error("Error loading playlist:", error);
+        $("#loadingMessage").text("Error loading channels. Please try again.");
+      }
+    }
+
+    function populateCategoryDropdown() {
+      const select = $("#categoryFilter");
+      select.empty();
+      select.append('<option value="all">All Categories</option>');
+      categories.forEach(cat => {
+        if (cat !== "other") {
+          select.append(`<option value="${cat}">${cat}</option>`);
+        }
+      });
+      select.append('<option value="other">Other</option>');
+    }
+
+    function displayChannels(channels, category) {
+      const container = $("#channelList");
+      const noChannelsMessage = $("#noChannelsMessage");
+      container.empty();
+      noChannelsMessage.hide();
+
+      let filteredChannels = channels.filter(ch => category === "all" || ch.category === category);
+      if (filteredChannels.length === 0) {
+        noChannelsMessage.show();
+        return;
+      }
+
+      filteredChannels.forEach((ch) => {
+        const div = $(`
+          <div class="channel-item">
+            <img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/200x300'" alt="${ch.name}">
+            <div class="channel-name">${ch.name}</div>
+          </div>
+        `);
+        div.on("click", () => playChannel(ch.url, ch.logo));
+        container.append(div);
+      });
+    }
+
+    function playChannel(url, logo) {
+      const modal = $("#videoPopup");
+      const video = $("#videoPlayer")[0];
+
+      video.poster = logo;
+
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play();
+        });
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = url;
+        video.play();
+      } else {
+        alert("Your browser does not support HLS playback.");
+      }
+
+      modal.css("display", "flex");
+      // Push a new state for the video popup, keeping track of Live TV context
+      history.pushState({ videoPopupOpen: true, fromLiveTv: true }, "");
+    }
+
+    function openLiveTvPopup() {
+      const popup = document.getElementById("liveTvPopup");
+      popup.style.display = "flex";
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      history.pushState({ liveTvOpen: true }, "");
+      loadPlaylist();
+    }
+
+    function closeLiveTvPopup() {
+      const popup = document.getElementById("liveTvPopup");
+      popup.style.display = "none";
+      history.back();
+    }
+
+    function closeVideoPopup() {
+      const popup = document.getElementById("videoPopup");
+      popup.style.display = "none";
+      const video = $("#videoPlayer")[0];
+      video.pause();
+      video.src = "";
+      video.poster = "";
+
+      // Reopen the Live TV popup
+      const liveTvPopup = document.getElementById("liveTvPopup");
+      liveTvPopup.style.display = "flex";
+
+      // Replace the current history state to ensure back navigation works correctly
+      history.replaceState({ liveTvOpen: true }, "");
+    }
+
+    $("#liveTvSearch").on("keyup", function () {
+      const filter = $(this).val().toLowerCase();
+      const category = $("#categoryFilter").val();
+      const filtered = allChannels.filter(ch => 
+        ch.name.toLowerCase().includes(filter) && (category === "all" || ch.category === category)
+      );
+      displayChannels(filtered, category);
+    });
+
+    $("#categoryFilter").on("change", function () {
+      const category = $(this).val();
+      const searchTerm = $("#liveTvSearch").val().toLowerCase();
+      const filtered = allChannels.filter(ch => 
+        (searchTerm === "" || ch.name.toLowerCase().includes(searchTerm)) && 
+        (category === "all" || ch.category === category)
+      );
+      displayChannels(filtered, category);
+    });
+
+    window.addEventListener("popstate", (event) => {
+      // Close all popups by default
       document.getElementById("movieModal").style.display = "none";
       document.getElementById("qualityPopup").style.display = "none";
       document.getElementById("watchPopup").style.display = "none";
+      document.getElementById("liveTvPopup").style.display = "none";
+      document.getElementById("videoPopup").style.display = "none";
       document.getElementById("watchIframe").src = "";
+      const video = $("#videoPlayer")[0];
+      video.pause();
+      video.src = "";
+      video.poster = "";
+
+      // Check the history state to decide which popup to reopen
+      if (event.state) {
+        if (event.state.liveTvOpen) {
+          document.getElementById("liveTvPopup").style.display = "flex";
+        } else if (event.state.videoPopupOpen && event.state.fromLiveTv) {
+          // If navigating back from video popup, reopen Live TV popup
+          document.getElementById("liveTvPopup").style.display = "flex";
+          history.replaceState({ liveTvOpen: true }, "");
+        } else if (event.state.modalOpen) {
+          document.getElementById("movieModal").style.display = "flex";
+        } else if (event.state.watchOpen) {
+          document.getElementById("watchPopup").style.display = "flex";
+        } else if (event.state.qualityOpen) {
+          document.getElementById("qualityPopup").style.display = "flex";
+        }
+      }
     });
 
     window.addEventListener("click", function(e) {
       if (e.target.id === "movieModal") history.back();
       if (e.target.id === "qualityPopup") history.back();
       if (e.target.id === "watchPopup") history.back();
+      if (e.target.id === "liveTvPopup") history.back();
+      if (e.target.id === "videoPopup") closeVideoPopup();
     });
 
     function setupScrollObserver() {
@@ -443,16 +796,15 @@
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.boundingClientRect.top >= 0) {
-            categorySection.classList.remove('hidden'); // मूवी सेक्शन ऊपर है, दिखाओ
+            categorySection.classList.remove('hidden');
           } else {
-            categorySection.classList.add('hidden'); // मूवी सेक्शन नीचे स्क्रॉल हुआ, छुपाओ
+            categorySection.classList.add('hidden');
           }
         });
       }, { threshold: 0 });
 
       observer.observe(movieContainer);
 
-      // बैकअप के लिए स्क्रॉल इवेंट
       window.addEventListener('scroll', () => {
         const movieTop = movieContainer.getBoundingClientRect().top;
         if (movieTop >= 0) {
