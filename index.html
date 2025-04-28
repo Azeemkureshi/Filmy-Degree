@@ -246,16 +246,17 @@
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       text-align: center;
-      width: 90%;
+      width: 100%;
       max-width: 400px;
       max-height: 80vh;
       overflow-y: auto;
       animation: scaleIn 0.3s ease;
+      position: relative;
     }
     .fin {
       width: 90%;
       margin: 10px auto;
-      height: 40px;
+      height: 30px;
       font-size: 16px;
       background-color: rgb(40, 40, 40);
       color: white;
@@ -272,7 +273,7 @@
       background: black;
     }
     .category-filter {
-      margin: 0px auto;
+      margin: 10px auto;
       width: 100%;
       text-align: center;
     }
@@ -294,13 +295,13 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      padding: 10px;
+      padding: 1px;
       background: #1a1a1a;
     }
     .channel-item {
       position: relative;
-      width: calc(50.50% - 20px);
-      margin: 2px;
+      width: calc(40% - 10px);
+      margin: 8px;
       border: 3px solid rgb(0, 200, 200);
       background: #000;
       border-radius: 10px;
@@ -338,7 +339,7 @@
       margin-top: 20px;
     }
     #loadingMessage {
-      display: block; /* Show by default until channels load */
+      display: block;
     }
     .video-popup {
       display: none;
@@ -370,9 +371,9 @@
       border-radius: 8px;
       background: black;
       box-shadow: 0 5px 5px #000;
-      object-fit: contain; /* Ensure poster image fits properly */
+      object-fit: contain;
     }
-    .video-popup .close-btn {
+    .close-btn {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -382,6 +383,7 @@
       padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
+      z-index: 10;
     }
     @keyframes scaleIn {
       from { transform: scale(0.9); opacity: 0; }
@@ -456,6 +458,7 @@
 
   <div id="liveTvPopup" class="live-tv-modal">
     <div class="live-tv-content">
+      <button class="close-btn" onclick="closeLiveTvPopup()">×</button>
       <input class="fin" id="liveTvSearch" placeholder="Search Channel here..." type="text" />
       <div class="category-filter">
         <select id="categoryFilter">
@@ -485,10 +488,16 @@
     const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
     const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
     const AD_URL = `https://sheets.googleapis.com/v4/spreadsheets/${AD_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+    const playlistUrl = "https://iptv-org.github.io/iptv/index.m3u";
 
     let movieData = [];
     let adsData = [];
     let currentWatchUrl = "";
+    let allChannels = [];
+    let categories = new Set();
+    let displayedChannels = [];
+    let currentIndex = 0;
+    const batchSize = 50;
 
     async function fetchMoviesAndAds() {
       try {
@@ -606,12 +615,19 @@
         });
     }
 
-    // Live TV Channels
-    const playlistUrl = "https://iptv-org.github.io/iptv/index.m3u";
-    let allChannels = [];
-    let categories = new Set();
-
     async function loadPlaylist() {
+      const cacheKey = "iptv_channels";
+      const cachedData = localStorage.getItem(cacheKey);
+
+      if (cachedData) {
+        allChannels = JSON.parse(cachedData);
+        categories = new Set(allChannels.map(ch => ch.category));
+        populateCategoryDropdown();
+        displayChannels(allChannels, "all");
+        $("#loadingMessage").hide();
+        return;
+      }
+
       try {
         const res = await fetch(playlistUrl);
         const text = await res.text();
@@ -631,12 +647,15 @@
             allChannels.push({ name, logo, url, category });
           }
         }
+
+        localStorage.setItem(cacheKey, JSON.stringify(allChannels));
         populateCategoryDropdown();
         displayChannels(allChannels, "all");
         $("#loadingMessage").hide();
       } catch (error) {
         console.error("Error loading playlist:", error);
-        $("#loadingMessage").text("Error loading channels. Please try again.");
+        $("#loadingMessage").hide();
+        $("#noChannelsMessage").text("Failed to load channels. Please try again.").show();
       }
     }
 
@@ -664,41 +683,63 @@
         return;
       }
 
-      filteredChannels.forEach((ch) => {
+      displayedChannels = filteredChannels;
+      currentIndex = 0;
+      loadMoreChannels();
+
+      container.off("scroll").on("scroll", function () {
+        if (container[0].scrollHeight - container.scrollTop() <= container.outerHeight() + 100) {
+          loadMoreChannels();
+        }
+      });
+    }
+
+    function loadMoreChannels() {
+      const container = $("#channelList");
+      const endIndex = Math.min(currentIndex + batchSize, displayedChannels.length);
+
+      for (let i = currentIndex; i < endIndex; i++) {
+        const ch = displayedChannels[i];
         const div = $(`
           <div class="channel-item">
-            <img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/200x300'" alt="${ch.name}">
+            <img src="${ch.logo}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x300'" alt="${ch.name}">
             <div class="channel-name">${ch.name}</div>
           </div>
         `);
         div.on("click", () => playChannel(ch.url, ch.logo));
         container.append(div);
-      });
+      }
+
+      currentIndex = endIndex;
     }
 
-    function playChannel(url, logo) {
+    async function playChannel(url, logo) {
       const modal = $("#videoPopup");
       const video = $("#videoPlayer")[0];
 
       video.poster = logo;
 
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-        });
-      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = url;
-        video.play();
-      } else {
-        alert("Your browser does not support HLS playback.");
-      }
+      try {
+        const response = await fetch(url, { method: "HEAD", mode: "no-cors" });
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(url);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            video.play().catch(() => alert("चैनल चलाने में विफल। कृपया दूसरा चैनल आज़माएं।"));
+          });
+        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          video.src = url;
+          video.play().catch(() => alert("चैनल चलाने में विफल। कृपया दूसरा चैनल आज़माएं।"));
+        } else {
+          alert("आपका ब्राउज़र HLS प्लेबैक को समर्थन नहीं करता।");
+        }
 
-      modal.css("display", "flex");
-      // Push a new state for the video popup, keeping track of Live TV context
-      history.pushState({ videoPopupOpen: true, fromLiveTv: true }, "");
+        modal.css("display", "flex");
+        history.pushState({ videoPopupOpen: true, fromLiveTv: true }, "");
+      } catch (error) {
+        alert("यह चैनल उपलब्ध नहीं है। कृपया दूसरा चैनल आज़माएं।");
+      }
     }
 
     function openLiveTvPopup() {
@@ -723,22 +764,26 @@
       video.src = "";
       video.poster = "";
 
-      // Reopen the Live TV popup
-      const liveTvPopup = document.getElementById("liveTvPopup");
-      liveTvPopup.style.display = "flex";
-
-      // Replace the current history state to ensure back navigation works correctly
+      document.getElementById("liveTvPopup").style.display = "flex";
       history.replaceState({ liveTvOpen: true }, "");
     }
 
-    $("#liveTvSearch").on("keyup", function () {
+    function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    $("#liveTvSearch").on("keyup", debounce(function () {
       const filter = $(this).val().toLowerCase();
       const category = $("#categoryFilter").val();
       const filtered = allChannels.filter(ch => 
         ch.name.toLowerCase().includes(filter) && (category === "all" || ch.category === category)
       );
       displayChannels(filtered, category);
-    });
+    }, 300));
 
     $("#categoryFilter").on("change", function () {
       const category = $(this).val();
@@ -751,7 +796,6 @@
     });
 
     window.addEventListener("popstate", (event) => {
-      // Close all popups by default
       document.getElementById("movieModal").style.display = "none";
       document.getElementById("qualityPopup").style.display = "none";
       document.getElementById("watchPopup").style.display = "none";
@@ -763,14 +807,9 @@
       video.src = "";
       video.poster = "";
 
-      // Check the history state to decide which popup to reopen
       if (event.state) {
         if (event.state.liveTvOpen) {
           document.getElementById("liveTvPopup").style.display = "flex";
-        } else if (event.state.videoPopupOpen && event.state.fromLiveTv) {
-          // If navigating back from video popup, reopen Live TV popup
-          document.getElementById("liveTvPopup").style.display = "flex";
-          history.replaceState({ liveTvOpen: true }, "");
         } else if (event.state.modalOpen) {
           document.getElementById("movieModal").style.display = "flex";
         } else if (event.state.watchOpen) {
@@ -785,7 +824,7 @@
       if (e.target.id === "movieModal") history.back();
       if (e.target.id === "qualityPopup") history.back();
       if (e.target.id === "watchPopup") history.back();
-      if (e.target.id === "liveTvPopup") history.back();
+      if (e.target.id === "liveTvPopup") closeLiveTvPopup();
       if (e.target.id === "videoPopup") closeVideoPopup();
     });
 
