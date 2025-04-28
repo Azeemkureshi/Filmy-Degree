@@ -6,8 +6,6 @@
   <title>Movie Website</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -240,106 +238,6 @@
       align-items: center;
       z-index: 9999;
     }
-    .live-tv-content {
-      background: #1a1a1a;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-      max-height: 80vh;
-      overflow-y: auto;
-      animation: scaleIn 0.3s ease;
-    }
-    .fin {
-      width: 90%;
-      margin: 10px auto;
-      height: 40px;
-      font-size: 16px;
-      background-color: rgb(40, 40, 40);
-      color: white;
-      border-radius: 10px;
-      border: 3px solid rgb(0, 200, 200);
-      outline: none;
-      text-align: center;
-      padding: 0 10px;
-      transition: all 0.3s ease;
-    }
-    .fin:hover {
-      border: 3px solid rgb(255, 60, 140);
-      color: white;
-      background: black;
-    }
-    .category-filter {
-      margin: 0px auto;
-      width: 100%;
-      text-align: center;
-    }
-    .category-filter select {
-      padding: 5px;
-      font-size: 16px;
-      background: #222;
-      color: white;
-      border: 2px solid rgb(0, 200, 200);
-      border-radius: 5px;
-      transition: all 0.3s ease;
-      width: 300px;
-      display: inline-block;
-    }
-    .category-filter select:hover {
-      border-color: rgb(255, 60, 140);
-    }
-    .channel-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 10px;
-      background: #1a1a1a;
-    }
-    .channel-item {
-      position: relative;
-      width: calc(50.50% - 20px);
-      margin: 2px;
-      border: 3px solid rgb(0, 200, 200);
-      background: #000;
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-    }
-    .channel-item:hover {
-      border-color: rgb(255, 60, 140);
-      transform: scale(1.05);
-    }
-    .channel-item img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      pointer-events: none;
-      display: block;
-    }
-    .channel-name {
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-      color: white;
-      background: #222;
-      word-wrap: break-word;
-    }
-    #loadingMessage, #noChannelsMessage {
-      display: none;
-      text-align: center;
-      font-size: 18px;
-      color: rgb(0, 200, 200);
-      margin-top: 20px;
-    }
-    #loadingMessage {
-      display: block; /* Show by default until channels load */
-    }
     .video-popup {
       display: none;
       position: fixed;
@@ -368,9 +266,6 @@
       width: 100%;
       height: 100%;
       border-radius: 8px;
-      background: black;
-      box-shadow: 0 5px 5px #000;
-      object-fit: contain; /* Ensure poster image fits properly */
     }
     .video-popup .close-btn {
       position: absolute;
@@ -454,24 +349,12 @@
     </div>
   </div>
 
-  <div id="liveTvPopup" class="live-tv-modal">
-    <div class="live-tv-content">
-      <input class="fin" id="liveTvSearch" placeholder="Search Channel here..." type="text" />
-      <div class="category-filter">
-        <select id="categoryFilter">
-          <option value="all">All Categories</option>
-        </select>
-      </div>
-      <div id="loadingMessage">Please Wait...</div>
-      <div id="noChannelsMessage">Channel Not Available</div>
-      <div class="channel-grid" id="channelList"></div>
-    </div>
-  </div>
+  <div id="liveTvPopup" class="live-tv-modal"></div>
 
   <div id="videoPopup" class="video-popup">
     <div class="video-popup-content">
-      <button class="close-btn" onclick="closeVideoPopup()">×</button>
-      <video id="videoPlayer" controls autoplay>
+      <button class="close-btn" onclick="closeVideoPopup()">बंद करें</button>
+      <video id="videoPlayer" class="video-js" controls>
         <source id="videoSource" src="" type="application/x-mpegURL">
         आपका ब्राउज़र वीडियो टैग को सपोर्ट नहीं करता।
       </video>
@@ -606,107 +489,24 @@
         });
     }
 
-    // Live TV Channels
-    const playlistUrl = "https://animeflixhindi.net.in/freem3u.m3u";
-    let allChannels = [];
-    let categories = new Set();
-
-    async function loadPlaylist() {
-      try {
-        const res = await fetch(playlistUrl);
-        const text = await res.text();
-        const lines = text.split("\n");
-        let name = "", logo = "", url = "", category = "other";
-
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].startsWith("#EXTINF")) {
-            name = lines[i].split(",")[1] || "Channel";
-            const logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
-            logo = logoMatch ? logoMatch[1] : "https://via.placeholder.com/200x300";
-            const categoryMatch = lines[i].match(/group-title="([^"]*)"/);
-            category = categoryMatch ? categoryMatch[1] : "other";
-            categories.add(category);
-          } else if (lines[i].startsWith("http")) {
-            url = lines[i];
-            allChannels.push({ name, logo, url, category });
-          }
-        }
-        populateCategoryDropdown();
-        displayChannels(allChannels, "all");
-        $("#loadingMessage").hide();
-      } catch (error) {
-        console.error("Error loading playlist:", error);
-        $("#loadingMessage").text("Error loading channels. Please try again.");
-      }
-    }
-
-    function populateCategoryDropdown() {
-      const select = $("#categoryFilter");
-      select.empty();
-      select.append('<option value="all">All Categories</option>');
-      categories.forEach(cat => {
-        if (cat !== "other") {
-          select.append(`<option value="${cat}">${cat}</option>`);
-        }
-      });
-      select.append('<option value="other">Other</option>');
-    }
-
-    function displayChannels(channels, category) {
-      const container = $("#channelList");
-      const noChannelsMessage = $("#noChannelsMessage");
-      container.empty();
-      noChannelsMessage.hide();
-
-      let filteredChannels = channels.filter(ch => category === "all" || ch.category === category);
-      if (filteredChannels.length === 0) {
-        noChannelsMessage.show();
-        return;
-      }
-
-      filteredChannels.forEach((ch) => {
-        const div = $(`
-          <div class="channel-item">
-            <img src="${ch.logo}" onerror="this.src='https://via.placeholder.com/200x300'" alt="${ch.name}">
-            <div class="channel-name">${ch.name}</div>
-          </div>
-        `);
-        div.on("click", () => playChannel(ch.url, ch.logo));
-        container.append(div);
-      });
-    }
-
-    function playChannel(url, logo) {
-      const modal = $("#videoPopup");
-      const video = $("#videoPlayer")[0];
-
-      video.poster = logo;
-
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-        });
-      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = url;
-        video.play();
-      } else {
-        alert("Your browser does not support HLS playback.");
-      }
-
-      modal.css("display", "flex");
-      // Push a new state for the video popup, keeping track of Live TV context
-      history.pushState({ videoPopupOpen: true, fromLiveTv: true }, "");
-    }
-
     function openLiveTvPopup() {
       const popup = document.getElementById("liveTvPopup");
+      // Clear any existing content in the popup
+      popup.innerHTML = "";
+      // Create an iframe element
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://filmyfly.win/";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      iframe.allow = "fullscreen";
+      iframe.allowFullscreen = true;
+      // Append the iframe to the popup
+      popup.appendChild(iframe);
+      // Display the popup
       popup.style.display = "flex";
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       history.pushState({ liveTvOpen: true }, "");
-      loadPlaylist();
     }
 
     function closeLiveTvPopup() {
@@ -718,67 +518,22 @@
     function closeVideoPopup() {
       const popup = document.getElementById("videoPopup");
       popup.style.display = "none";
-      const video = $("#videoPlayer")[0];
-      video.pause();
-      video.src = "";
-      video.poster = "";
-
-      // Reopen the Live TV popup
-      const liveTvPopup = document.getElementById("liveTvPopup");
-      liveTvPopup.style.display = "flex";
-
-      // Replace the current history state to ensure back navigation works correctly
-      history.replaceState({ liveTvOpen: true }, "");
+      const videoPlayer = videojs("videoPlayer");
+      videoPlayer.pause();
+      videoPlayer.src("");
+      history.back();
     }
 
-    $("#liveTvSearch").on("keyup", function () {
-      const filter = $(this).val().toLowerCase();
-      const category = $("#categoryFilter").val();
-      const filtered = allChannels.filter(ch => 
-        ch.name.toLowerCase().includes(filter) && (category === "all" || ch.category === category)
-      );
-      displayChannels(filtered, category);
-    });
-
-    $("#categoryFilter").on("change", function () {
-      const category = $(this).val();
-      const searchTerm = $("#liveTvSearch").val().toLowerCase();
-      const filtered = allChannels.filter(ch => 
-        (searchTerm === "" || ch.name.toLowerCase().includes(searchTerm)) && 
-        (category === "all" || ch.category === category)
-      );
-      displayChannels(filtered, category);
-    });
-
-    window.addEventListener("popstate", (event) => {
-      // Close all popups by default
+    window.addEventListener("popstate", () => {
       document.getElementById("movieModal").style.display = "none";
       document.getElementById("qualityPopup").style.display = "none";
       document.getElementById("watchPopup").style.display = "none";
       document.getElementById("liveTvPopup").style.display = "none";
       document.getElementById("videoPopup").style.display = "none";
       document.getElementById("watchIframe").src = "";
-      const video = $("#videoPlayer")[0];
-      video.pause();
-      video.src = "";
-      video.poster = "";
-
-      // Check the history state to decide which popup to reopen
-      if (event.state) {
-        if (event.state.liveTvOpen) {
-          document.getElementById("liveTvPopup").style.display = "flex";
-        } else if (event.state.videoPopupOpen && event.state.fromLiveTv) {
-          // If navigating back from video popup, reopen Live TV popup
-          document.getElementById("liveTvPopup").style.display = "flex";
-          history.replaceState({ liveTvOpen: true }, "");
-        } else if (event.state.modalOpen) {
-          document.getElementById("movieModal").style.display = "flex";
-        } else if (event.state.watchOpen) {
-          document.getElementById("watchPopup").style.display = "flex";
-        } else if (event.state.qualityOpen) {
-          document.getElementById("qualityPopup").style.display = "flex";
-        }
-      }
+      const videoPlayer = videojs("videoPlayer");
+      videoPlayer.pause();
+      videoPlayer.src("");
     });
 
     window.addEventListener("click", function(e) {
