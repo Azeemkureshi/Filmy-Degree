@@ -296,11 +296,10 @@
 <body>
   <div class="search-container">
     <input type="text" class="search-box" id="search" placeholder="Search Movies..." onkeyup="searchMovies()"/>
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhMU_U1U48E_DDp0t5Ajd3rt4-9NruJVZ1qZyWuCTqbTvPGc8Gag5CJ8-KoSM6S-NGyKyNyIe4P2QzZqHXFrYTk6EpxHGNtvU7-qaSwbnJhtXpvriobmhJ13fxDqIQv4MTZZNI2eWazgwaWMBuML-kmmmVisKOIdMpjaetft1j8uoyYqR2CaXsVOyzDum/s256/1000342000.png" class="search-icon" alt="Search"/>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhMU_U1U48E_DDp0t5Ajd3rt4-9NruJvZ1qZyWuCTqbTvPGc8Gag5CJ8-KoSM6S-NGyKyNyIe4P2QzZqHXFrYTk6EpxHGNtvU7-qaSwbnJhtXpvriobmhJ13fxDqIQv4MTZZNI2eWazgwaWMBuML-kmmmVisKOIdMpjaetft1j8uoyYqR2CaXsVOyzDum/s256/1000342000.png" class="search-icon" alt="Search"/>
   </div>
 
   <div class="category-container">
-    Search Movies...</div>
     <button class="category-btn" onclick="openLiveTvPopup()">Live TV</button>
     <button class="category-btn" onclick="filterMovies('COMEDY')">COMEDY</button>
     <button class="category-btn" onclick="filterMovies('DRAMA')">DRAMA</button>
@@ -467,10 +466,9 @@
       let l720 = downloadLinks[1] || "#";
       let l1080 = downloadLinks[2] || "#";
 
-      // Directly set the original URLs
-      document.getElementById("download480p").href = l480;
-      document.getElementById("download720p").href = l720;
-      document.getElementById("download1080p").href = l1080;
+      shortenAndSetLink(l480, "download480p");
+      shortenAndSetLink(l720, "download720p");
+      shortenAndSetLink(l1080, "download1080p");
 
       document.getElementById("download480p").disabled = !downloadLinks[0];
       document.getElementById("download720p").disabled = !downloadLinks[1];
@@ -482,9 +480,24 @@
 
     function openWatchPopup() {
       document.getElementById("watchIframe").src = currentWatchUrl;
-      document.getElementById("watchPopup"). Rekha style.display = "flex";
+      document.getElementById("watchPopup").style.display = "flex";
       confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
       history.pushState({ watchOpen: true }, "");
+    }
+
+    function shortenAndSetLink(originalUrl, elementId) {
+      if (originalUrl === "#") {
+        document.getElementById(elementId).href = originalUrl;
+        return;
+      }
+      fetch(`https:/ /nanolinks.in /api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
+        })
+        .catch(() => {
+          document.getElementById(elementId).href = originalUrl;
+        });
     }
 
     function openLiveTvPopup() {
