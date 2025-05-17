@@ -490,7 +490,7 @@
         document.getElementById(elementId).href = originalUrl;
         return;
       }
-      fetch(`https:/ /nanolinks.in /api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
+      fetch(`https://api.gplinks.com/api?api=d85d4aa6db7fca56a199c6339576cc66315852a0&url=${originalUrl}`)
         .then(res => res.json())
         .then(data => {
           document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
