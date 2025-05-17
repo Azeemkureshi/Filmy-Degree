@@ -404,11 +404,11 @@
       document.getElementById("loading").style.display = "none";
 
       movies.forEach((movie, index) => {
-        let [title, imageUrl, watchLink, downloadLinks, genre] = movie;
+        let [title, imageUrl, watchLink, download480p, download720p, download1080p, genre] = movie;
 
         let div = document.createElement("div");
         div.classList.add("movie");
-        div.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', \`${downloadLinks}\`, '${genre}')">`;
+        div.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', ['${download480p}', '${download720p}', '${download1080p}'], '${genre}')">`;
         container.appendChild(div);
 
         if ((index + 1) % 5 === 0) {
@@ -433,7 +433,7 @@
     }
 
     function filterMovies(category) {
-      let filtered = movieData.filter(m => m[4].toUpperCase() === category);
+      let filtered = movieData.filter(m => m[6].toUpperCase() === category);
       displayMovies(filtered);
     }
 
@@ -462,10 +462,17 @@
         document.getElementById("modalAd").innerHTML = `<a href="${link}" target="_blank"><img src="${img}" style="width:100%;border-radius:10px;"></a>`;
       }
 
-      let [l480, l720, l1080] = downloadLinks.split("|");
+      let l480 = downloadLinks[0] || "#";
+      let l720 = downloadLinks[1] || "#";
+      let l1080 = downloadLinks[2] || "#";
+
       shortenAndSetLink(l480, "download480p");
       shortenAndSetLink(l720, "download720p");
       shortenAndSetLink(l1080, "download1080p");
+
+      document.getElementById("download480p").disabled = !downloadLinks[0];
+      document.getElementById("download720p").disabled = !downloadLinks[1];
+      document.getElementById("download1080p").disabled = !downloadLinks[2];
 
       document.getElementById("movieModal").style.display = "flex";
       history.pushState({ modalOpen: true }, "");
@@ -479,6 +486,10 @@
     }
 
     function shortenAndSetLink(originalUrl, elementId) {
+      if (originalUrl === "#") {
+        document.getElementById(elementId).href = originalUrl;
+        return;
+      }
       fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
         .then(res => res.json())
         .then(data => {
@@ -491,9 +502,7 @@
 
     function openLiveTvPopup() {
       const popup = document.getElementById("liveTvPopup");
-      // Clear any existing content in the popup
       popup.innerHTML = "";
-      // Create an iframe element
       const iframe = document.createElement("iframe");
       iframe.src = "https://filmy-degree-online.blogspot.com/2025/04/live-tv-channels-body-margin-0_28.html?m=1";
       iframe.style.width = "100%";
@@ -501,9 +510,7 @@
       iframe.style.border = "none";
       iframe.allow = "fullscreen";
       iframe.allowFullscreen = true;
-      // Append the iframe to the popup
       popup.appendChild(iframe);
-      // Display the popup
       popup.style.display = "flex";
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       history.pushState({ liveTvOpen: true }, "");
