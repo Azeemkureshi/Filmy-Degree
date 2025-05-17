@@ -334,9 +334,9 @@
     <div class="quality-content">
       <h3>SELECT DOWNLOAD QUALITY</h3>
       <div class="download-buttons">
-        <a id="download480p" class="btn download" target="_blank" href="#">DOWNLOAD LINK 480P</a>
-        <a id="download720p" class="btn download" target="_blank" href="#">DOWNLOAD LINK 720P</a>
-        <a id="download1080p" class="btn download" target="_blank" href="#">DOWNLOAD LINK 1080P</a>
+        <a id="download480p" class="btn download" target="_blank">DOWNLOAD LINK 480P</a>
+        <a id="download720p" class="btn download" target="_blank">DOWNLOAD LINK 720P</a>
+        <a id="download1080p" class="btn download" target="_blank">DOWNLOAD LINK 1080P</a>
       </div>
     </div>
   </div>
@@ -462,17 +462,17 @@
         document.getElementById("modalAd").innerHTML = `<a href="${link}" target="_blank"><img src="${img}" style="width:100%;border-radius:10px;"></a>`;
       }
 
-      let l480 = downloadLinks[0] && downloadLinks[0].trim() ? downloadLinks[0] : "#";
-      let l720 = downloadLinks[1] && downloadLinks[1].trim() ? downloadLinks[1] : "#";
-      let l1080 = downloadLinks[2] && downloadLinks[2].trim() ? downloadLinks[2] : "#";
+      let l480 = downloadLinks[0] || "#";
+      let l720 = downloadLinks[1] || "#";
+      let l1080 = downloadLinks[2] || "#";
 
       shortenAndSetLink(l480, "download480p");
       shortenAndSetLink(l720, "download720p");
       shortenAndSetLink(l1080, "download1080p");
 
-      document.getElementById("download480p").disabled = l480 === "#";
-      document.getElementById("download720p").disabled = l720 === "#";
-      document.getElementById("download1080p").disabled = l1080 === "#";
+      document.getElementById("download480p").disabled = !downloadLinks[0];
+      document.getElementById("download720p").disabled = !downloadLinks[1];
+      document.getElementById("download1080p").disabled = !downloadLinks[2];
 
       document.getElementById("movieModal").style.display = "flex";
       history.pushState({ modalOpen: true }, "");
@@ -486,35 +486,17 @@
     }
 
     function shortenAndSetLink(originalUrl, elementId) {
-      const element = document.getElementById(elementId);
-      if (!originalUrl || originalUrl === "#" || !originalUrl.trim()) {
-        element.href = "#";
-        element.style.pointerEvents = "none"; // Prevent clicking
-        element.style.opacity = "0.5"; // Visually indicate disabled
-        console.warn(`No valid URL provided for ${elementId}`);
+      if (originalUrl === "#") {
+        document.getElementById(elementId).href = originalUrl;
         return;
       }
-
-      element.href = originalUrl; // Set original URL as fallback
-      element.style.pointerEvents = "auto"; // Ensure clickable
-      element.style.opacity = "1"; // Reset opacity
-
-      fetch(`https://nanolinks.in/api?api=0988c5f0407c29f316166e18523395fd54336707&url=${encodeURIComponent(originalUrl)}`)
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-          return res.json();
-        })
+      fetch(`https:/ /nanolinks.in /api?api=0988c5f0407c29f316166e18523395fd54336707&url=${originalUrl}`)
+        .then(res => res.json())
         .then(data => {
-          if (data.shortenedUrl) {
-            element.href = data.shortenedUrl;
-            console.log(`Shortened URL for ${elementId}: ${data.shortenedUrl}`);
-          } else {
-            console.warn(`No shortened URL returned for ${elementId}, using original: ${originalUrl}`);
-          }
+          document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
         })
-        .catch(error => {
-          console.error(`Error shortening URL for ${elementId}:`, error);
-          element.href = originalUrl; // Fallback to original URL
+        .catch(() => {
+          document.getElementById(elementId).href = originalUrl;
         });
     }
 
