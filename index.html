@@ -403,7 +403,10 @@
       container.innerHTML = "";
       document.getElementById("loading").style.display = "none";
 
-      movies.forEach((movie, index) => {
+      // मूवीज की लिस्ट को उल्टा करें ताकि नई मूवीज ऊपर दिखें
+      const reversedMovies = [...movies].reverse();
+
+      reversedMovies.forEach((movie, index) => {
         let [title, imageUrl, watchLink, download480p, download720p, download1080p, genre] = movie;
 
         let div = document.createElement("div");
