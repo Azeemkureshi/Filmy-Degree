@@ -363,7 +363,226 @@
 
   <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
   <script>
-    function _0x3b3a(){var _0x51c70e=['getBoundingClientRect','AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs','filter','target','8926952nQfPRU','style','https://sheets.googleapis.com/v4/spreadsheets/','/values/Sheet1?key=','origin','values','3692864CgMvYw','movie','search','noResults','videoPopup','innerHTML','816912hTNYuV','addEventListener','1459463FAPyqU','232986fLdKmL','length','click','httpsisgooglecom','history','1668870pXvTde','1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU','json','6sMvNTr','pause','modalGenre','1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE','textContent','pushState','spread','error','420YJBIyS','removeChild','hidden','display','videoPlayer','back','getElementById','modalAd','Promise','particleCount','liveTvOpen','createElement','movieModal','1394145NTSgqX','watchIframe','body','modalTitle','modalImage','watchPopup','src','floor','liveTvPopup','appendChild','push','reverse','slice','3307527hXNnUu','category-container','.movie-container','querySelector','random','state','qualityOpen','remove','disabled','qualityPopup','15wPzQYd','forEach','toUpperCase','includes','all','catch','toLowerCase','log','console','confetti','2221360ZImjEn','2083615WpXqWn','open','popstate','modalOpen','add','classList','then'];_0x3b3a=function(){return _0x51c70e;};return _0x3b3a();}var _0x3032=function(_0x5a1811,_0x45231c){_0x5a1811=_0x5a1811-0x1d3;var _0x3b3a2a=_0x3b3a();return _0x3b3a2a[_0x5a1811];};(function(_0x2d0c2e,_0x43a854){var _0x45025d=_0x3032;while(!![]){try{var _0x5776d6=parseInt(_0x45025d(0x1f5))/0x1*(-parseInt(_0x45025d(0x1fe))/0x2)+parseInt(_0x45025d(0x21c))/0x3*(-parseInt(_0x45025d(0x1e3))/0x4)+parseInt(_0x45025d(0x1d5))/0x5*(-parseInt(_0x45025d(0x1e5))/0x6)+parseInt(_0x45025d(0x1e7))/0x7+-parseInt(_0x45025d(0x21b))/0x8+parseInt(_0x45025d(0x1fb))/0x9*(-parseInt(_0x45025d(0x1d7))/0xa)+-parseInt(_0x45025d(0x1fd))/0xb;if(_0x5776d6===_0x43a854)break;else _0x2d0c2e['push'](_0x2d0c2e['shift']());}catch(_0x424683){_0x2d0c2e['push'](_0x2d0c2e['shift']());}}}(_0x3b3a,0xd9d2c));const MOVIE_SHEET_ID=_0x3032(0x1fa),AD_SHEET_ID=_0x3032(0x201),API_KEY=_0x3032(0x1e8),MOVIE_URL=_0x3032(0x1e9)+MOVIE_SHEET_ID+_0x3032(0x1ea),AD_URL=_0x3032(0x1e9)+AD_SHEET_ID+_0x3032(0x1ea);let movieData=[],adsData=[],currentWatchUrl='';async function fetchMoviesAndAds(){var _0x1030e4=_0x3032;try{const[_0x2f8b5f,_0x4642ea]=await _0x1030e4(0x20f)['all']([fetch(MOVIE_URL),fetch(AD_URL)]);const _0x1a87e0=await _0x2f8b5f[_0x1030e4(0x1fc)](),_0x3d49f0=await _0x4642ea['json']();movieData=_0x1a87e0[_0x1030e4(0x1ec)][_0x1030e4(0x21a)](0x1),adsData=_0x3d49f0[_0x1030e4(0x1ec)][_0x1030e4(0x21a)](0x1),displayMovies(movieData),setupScrollObserver();}catch(_0x576b91){_0x1030e4(0x1dd)[_0x1030e4(0x1db)]('Error fetching data:',_0x576b91);}}function getRandomAd(){var _0x5b3ebc=_0x3032;if(adsData[_0x5b3ebc(0x1f7)]>0x0){let _0x3e7efd=Math[_0x5b3ebc(0x216)](Math[_0x5b3ebc(0x21e)]()*adsData['length']);return adsData[_0x3e7efd];}return null;}function displayMovies(_0x24ff31){var _0x539352=_0x3032;const _0x184291=document[_0x539352(0x20d)]('movies');_0x184291['innerHTML']='',document['getElementById']('loading')[_0x539352(0x1e8)]['display']='none';const _0x3b167a=[..._0x24ff31][_0x539352(0x219)]();_0x3b167a[_0x539352(0x1d3)](function(_0x16b042,_0x367a74){var _0x3de349=_0x539352;let[_0x5c72d5,_0x24143a,_0x280e22,_0x1f8072,_0x5466b0,_0x3ad144,_0x45a6c0]=_0x16b042;let _0x277a83=document['createElement']('div');_0x277a83['classList']['add'](_0x3de349(0x1ee));let _0x49c66f=_0x24143a,_0x4fe678=_0x5c72d5,_0x286e7a=_0x280e22,_0x25a66a=_0x1f8072,_0x1ca209=_0x5466b0,_0x307730=_0x3ad144,_0x3b1e8e=_0x45a6c0;_0x277a83[_0x3de349(0x1f2)]='<img src=\"'+_0x49c66f+'\" alt=\"'+_0x4fe678+'\" onclick=\"openModal(\''+_0x5c72d5+'\', \''+_0x24143a+'\', \''+_0x286e7a+'\', [\'\''+_0x25a66a+'\', \''+_0x1ca209+'\', \''+_0x307730+'\'], \''+_0x3b1e8e+'\')\">',_0x184291[_0x3de349(0x217)](_0x277a83);if((_0x367a74+0x1)%0x5===0x0){const _0x44621c=getRandomAd();if(_0x44621c){const[_0x2759e9,_0x401614]=_0x44621c;let _0x4c204d=document[_0x3de349(0x211)]('div');_0x4c204d[_0x3de349(0x1e1)][_0x3de349(0x1e0)]('movie'),_0x4c204d['innerHTML']='<a href=\"'+_0x401614+'\" target=\"_blank\"><img src=\"'+_0x2759e9+'\" alt=\"Ad\"></a>',_0x184291[_0x3de349(0x217)](_0x4c204d);}}});document[_0x539352(0x20d)](_0x539352(0x1f0))['style'][_0x539352(0x20a)]=_0x24ff31[_0x539352(0x1f7)]===0x0?'block':'none';}function searchMovies(){var _0x51bb8d=_0x3032;let _0x3b2413=document[_0x51bb8d(0x20d)](_0x51bb8d(0x1ef))['value'][_0x51bb8d(0x1db)]();let _0x3d0244=movieData[_0x51bb8d(0x1e9)](_0x4b7875=>_0x4b7875[0x0][_0x51bb8d(0x1db)]()[_0x51bb8d(0x1d6)](_0x3b2413));displayMovies(_0x3d0244);}function filterMovies(_0x4e037c){var _0x2cb605=_0x3032;let _0x5e8c8b=movieData[_0x2cb605(0x1e9)](_0xf49479=>_0xf49479[0x6]['toUpperCase']()===_0x4e037c);displayMovies(_0x5e8c8b);}function toggleQualityPopup(_0x1b4b7c){var _0x40d514=_0x3032;const _0x3b668f=document[_0x40d514(0x20d)](_0x40d514(0x1d1));if(_0x1b4b7c===![]||_0x3b668f['style']['display']==='flex'){_0x3b668f[_0x40d514(0x1e8)][_0x40d514(0x20a)]='none';if(history[_0x40d514(0x21f)]&&history['state'][_0x40d514(0x1d0)])history[_0x40d514(0x20c)]();}else _0x3b668f[_0x40d514(0x1e8)][_0x40d514(0x20a)]='flex',_0x40d514(0x1dc)({[(_0x40d514(0x210))]:0x64,'spread':0x46,'origin':{'y':0.6}}),history[_0x40d514(0x203)]({'qualityOpen':!![]},'');}function openModal(_0x3da9d0,_0x3ee41a,_0x573af8,_0x12b509,_0x4464c8){var _0x32c56a=_0x3032;document[_0x32c56a(0x20d)](_0x32c56a(0x214))[_0x32c56a(0x202)]=_0x3da9d0,document['getElementById'](_0x32c56a(0x215))[_0x32c56a(0x216)]=_0x3ee41a,document[_0x32c56a(0x20d)](_0x32c56a(0x200))[_0x32c56a(0x202)]=_0x4464c8,currentWatchUrl=_0x573af8,document[_0x32c56a(0x20d)](_0x32c56a(0x1d1))[_0x32c56a(0x1e8)][_0x32c56a(0x20a)]='none';let _0x4f4d1e=getRandomAd();if(_0x4f4d1e){const[_0x5824c8,_0x4a47a1]=_0x4f4d1e;document[_0x32c56a(0x20d)](_0x32c56a(0x20e))['innerHTML']='<a href=\"'+_0x4a47a1+'\" target=\"_blank\"><img src=\"'+_0x5824c8+'\" style=\"width:100%;border-radius:10px;\"></a>';}let _0x4fdf8a=_0x12b509[0x0]||'#',_0x2e35f3=_0x12b509[0x1]||'#',_0x170b99=_0x12b509[0x2]||'#';shortenAndSetLink(_0x4fdf8a,'download480p'),shortenAndSetLink(_0x2e35f3,'download720p'),shortenAndSetLink(_0x170b99,'download1080p'),document['getElementById']('download480p')[_0x32c56a(0x1d2)]=!_0x12b509[0x0],document[_0x32c56a(0x20d)]('download720p')[_0x32c56a(0x1d2)]=!_0x12b509[0x1],document[_0x32c56a(0x20d)]('download1080p')['disabled']=!_0x12b509[0x2],document[_0x32c56a(0x20d)](_0x32c56a(0x212))['style']['display']='flex',history[_0x32c56a(0x203)]({'modalOpen':!![]},'');}function openWatchPopup(){var _0x298495=_0x3032;document[_0x298495(0x20d)](_0x298495(0x213))[_0x298495(0x216)]=currentWatchUrl,document['getElementById'](_0x298495(0x216))['style']['display']='flex',_0x298495(0x1dc)({particleCount:0x64,[_0x298495(0x204)]:0x3c,[_0x298495(0x1eb)]:_0x3c299e=>{var _0x497afb=_0x298495;return{'y':0.6};}}),history[_0x298495(0x203)]({'watchOpen':!![]},'');}function shortenAndSetLink(_0x5b306b,_0x3f9826){var _0x3b118b=_0x3032;if(_0x5b306b==='#'){document['getElementById'](_0x3f9826)['href']=_0x5b306b;return;}fetch('url Shotner api Link 🔗'+_0x5b306b)[_0x3b118b(0x1e2)](_0x4f71be=>_0x4f71be[_0x3b118b(0x1fc)]())[_0x3b118b(0x1e2)](_0x221312=>{document[_0x3b118b(0x20d)](_0x3f9826)['href']=_0x221312['shortenedUrl']||_0x5b306b;})[_0x3b118b(0x1d8)](()=>{document['getElementById'](_0x3f9826)['href']=_0x5b306b;});}function openLiveTvPopup(){var _0x51c6b1=_0x3032;const _0x50c371=document['getElementById'](_0x51c6b1(0x217));_0x50c371['innerHTML']='';const _0x550993=document[_0x51c6b1(0x211)]('iframe');_0x550993[_0x51c6b1(0x216)]='https://google.com',_0x550993['style']['width']='100%',_0x550993['style']['height']='100%',_0x550993[_0x51c6b1(0x1e8)]['border']='none',_0x550993['allow']='fullscreen',_0x550993['allowFullscreen']=!![],_0x50c371['appendChild'](_0x550993),_0x50c371['style'][_0x51c6b1(0x20a)]='flex',_0x51c6b1(0x1dc)({'particleCount':0x64,'spread':0x46,[_0x51c6b1(0x1eb)]:_0x1f0b09=>{var _0x12b6f1=_0x51c6b1;return{'y':0.6};}}),history[_0x51c6b1(0x203)]({liveTvOpen:!![]},'');}function closeLiveTvPopup(){var _0x3eb186=_0x3032;const _0x17c0cb=document[_0x3eb186(0x20d)](_0x3eb186(0x217));_0x17c0cb[_0x3eb186(0x1e8)][_0x3eb186(0x20a)]='none',history['back']();}function closeVideoPopup(){var _0x272449=_0x3032;const _0x3b5f47=document[_0x272449(0x20d)](_0x272449(0x1f1));_0x3b5f47[_0x272449(0x1e8)][_0x272449(0x20a)]='none';const _0x4d56d3=videojs(_0x272449(0x20b));_0x4d56d3[_0x272449(0x1ff)](),_0x4d56d3['src'](''),history['back']();}window[_0x3032(0x1f4)]('popstate',function(){var _0x180f97=_0x3032;document['getElementById'](_0x180f97(0x212))['style'][_0x180f97(0x20a)]='none',document['getElementById'](_0x180f97(0x1d1))[_0x180f97(0x1e8)][_0x180f97(0x20a)]='none',document[_0x180f97(0x20d)](_0x180f97(0x216))['style']['display']='none',document[_0x180f97(0x20d)](_0x180f97(0x217))[_0x180f97(0x1e8)][_0x180f97(0x20a)]='none',document[_0x180f97(0x20d)](_0x180f97(0x1f1))[_0x180f97(0x1e8)][_0x180f97(0x20a)]='none',document['getElementById'](_0x180f97(0x213))[_0x180f97(0x216)]='';const _0x21235b=videojs('videoPlayer');_0x21235b[_0x180f97(0x1ff)](),_0x21235b['src']('');}),window['addEventListener']('click',function(_0x5c7f8a){var _0x3fbe0a=_0x3032;if(_0x5c7f8a['target']['id']===_0x3fbe0a(0x212))history['back']();if(_0x5c7f8a['target']['id']===_0x3fbe0a(0x1d1))history['back']();if(_0x5c7f8a[_0x3fbe0a(0x1ea)][_0x3fbe0a(0x1d4)]==='watchPopup')history['back']();if(_0x5c7f8a['target']['id']===_0x3fbe0a(0x217))history[_0x3fbe0a(0x20c)]();if(_0x5c7f8a[_0x3fbe0a(0x1ea)]['id']===_0x3fbe0a(0x1f1))closeVideoPopup();});function setupScrollObserver(){var _0x27c156=_0x3032;const _0x31a293=document[_0x27c156(0x21d)](_0x27c156(0x21b));const _0x1c8b74=document[_0x27c156(0x21d)](_0x27c156(0x21c));const _0x21f8a8=new IntersectionObserver(_0x2f641a=>{var _0x3d0e46=_0x27c156;_0x2f641a['forEach'](_0x4238e8=>{var _0x32ed41=_0x3d0e46;if(_0x4238e8[_0x32ed41(0x1e7)]()['top']>=0x0)_0x31a293['classList']['remove'](_0x32ed41(0x209));else _0x31a293[_0x32ed41(0x1e1)][_0x32ed41(0x1e0)](_0x32ed41(0x209));});},{'threshold':0x0});_0x21f8a8['observe'](_0x1c8b74),window['addEventListener']('scroll',()=>{var _0x451de6=_0x27c156;const _0x53dfb9=_0x1c8b74[_0x451de6(0x1e7)]()['top'];if(_0x53dfb9>=0x0)_0x31a293[_0x451de6(0x1e1)][_0x451de6(0x1cf)]('hidden');else _0x31a293[_0x451de6(0x1e1)]['add'](_0x451de6(0x209));});}fetchMoviesAndAds();
+    const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
+    const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
+    const API_KEY = "AIzaSyC1YPmJGo77go3igvLO4kewd0gdtXKXDRs";
+    const MOVIE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${MOVIE_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+    const AD_URL = `https://sheets.googleapis.com/v4/spreadsheets/${AD_SHEET_ID}/values/Sheet1?key=${API_KEY}`;
+
+    let movieData = [];
+    let adsData = [];
+    let currentWatchUrl = "";
+
+    async function fetchMoviesAndAds() {
+      try {
+        const [movieResponse, adResponse] = await Promise.all([
+          fetch(MOVIE_URL),
+          fetch(AD_URL)
+        ]);
+        const movieDataJson = await movieResponse.json();
+        const adDataJson = await adResponse.json();
+        movieData = movieDataJson.values.slice(1);
+        adsData = adDataJson.values.slice(1);
+        displayMovies(movieData);
+        setupScrollObserver();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    function getRandomAd() {
+      if (adsData.length > 0) {
+        let index = Math.floor(Math.random() * adsData.length);
+        return adsData[index];
+      }
+      return null;
+    }
+
+    function displayMovies(movies) {
+      const container = document.getElementById("movies");
+      container.innerHTML = "";
+      document.getElementById("loading").style.display = "none";
+
+      // मूवीज की लिस्ट को उल्टा करें ताकि नई मूवीज ऊपर दिखें
+      const reversedMovies = [...movies].reverse();
+
+      reversedMovies.forEach((movie, index) => {
+        let [title, imageUrl, watchLink, download480p, download720p, download1080p, genre] = movie;
+
+        let div = document.createElement("div");
+        div.classList.add("movie");
+        div.innerHTML = `<img src="${imageUrl}" alt="${title}" onclick="openModal('${title}', '${imageUrl}', '${watchLink}', ['${download480p}', '${download720p}', '${download1080p}'], '${genre}')">`;
+        container.appendChild(div);
+
+        if ((index + 1) % 5 === 0) {
+          const ad = getRandomAd();
+          if (ad) {
+            const [img, link] = ad;
+            let adDiv = document.createElement("div");
+            adDiv.classList.add("movie");
+            adDiv.innerHTML = `<a href="${link}" target="_blank"><img src="${img}" alt="Ad"></a>`;
+            container.appendChild(adDiv);
+          }
+        }
+      });
+
+      document.getElementById("noResults").style.display = movies.length === 0 ? "block" : "none";
+    }
+
+    function searchMovies() {
+      let q = document.getElementById("search").value.toLowerCase();
+      let filtered = movieData.filter(m => m[0].toLowerCase().includes(q));
+      displayMovies(filtered);
+    }
+
+    function filterMovies(category) {
+      let filtered = movieData.filter(m => m[6].toUpperCase() === category);
+      displayMovies(filtered);
+    }
+
+    function toggleQualityPopup(show) {
+      const popup = document.getElementById("qualityPopup");
+      if (show === false || popup.style.display === "flex") {
+        popup.style.display = "none";
+        if (history.state && history.state.qualityOpen) history.back();
+      } else {
+        popup.style.display = "flex";
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        history.pushState({ qualityOpen: true }, "");
+      }
+    }
+
+    function openModal(title, imageUrl, watchLink, downloadLinks, genre) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalImage").src = imageUrl;
+      document.getElementById("modalGenre").textContent = genre;
+      currentWatchUrl = watchLink;
+      document.getElementById("qualityPopup").style.display = "none";
+
+      let ad = getRandomAd();
+      if (ad) {
+        const [img, link] = ad;
+        document.getElementById("modalAd").innerHTML = `<a href="${link}" target="_blank"><img src="${img}" style="width:100%;border-radius:10px;"></a>`;
+      }
+
+      let l480 = downloadLinks[0] || "#";
+      let l720 = downloadLinks[1] || "#";
+      let l1080 = downloadLinks[2] || "#";
+
+      shortenAndSetLink(l480, "download480p");
+      shortenAndSetLink(l720, "download720p");
+      shortenAndSetLink(l1080, "download1080p");
+
+      document.getElementById("download480p").disabled = !downloadLinks[0];
+      document.getElementById("download720p").disabled = !downloadLinks[1];
+      document.getElementById("download1080p").disabled = !downloadLinks[2];
+
+      document.getElementById("movieModal").style.display = "flex";
+      history.pushState({ modalOpen: true }, "");
+    }
+
+    function openWatchPopup() {
+      document.getElementById("watchIframe").src = currentWatchUrl;
+      document.getElementById("watchPopup").style.display = "flex";
+      confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+      history.pushState({ watchOpen: true }, "");
+    }
+
+    function shortenAndSetLink(originalUrl, elementId) {
+      if (originalUrl === "#") {
+        document.getElementById(elementId).href = originalUrl;
+        return;
+      }
+      fetch(`url Shotner api Link 🔗${originalUrl}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById(elementId).href = data.shortenedUrl || originalUrl;
+        })
+        .catch(() => {
+          document.getElementById(elementId).href = originalUrl;
+        });
+    }
+
+    function openLiveTvPopup() {
+      const popup = document.getElementById("liveTvPopup");
+      popup.innerHTML = "";
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://google.com";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      iframe.allow = "fullscreen";
+      iframe.allowFullscreen = true;
+      popup.appendChild(iframe);
+      popup.style.display = "flex";
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      history.pushState({ liveTvOpen: true }, "");
+    }
+
+    function closeLiveTvPopup() {
+      const popup = document.getElementById("liveTvPopup");
+      popup.style.display = "none";
+      history.back();
+    }
+
+    function closeVideoPopup() {
+      const popup = document.getElementById("videoPopup");
+      popup.style.display = "none";
+      const videoPlayer = videojs("videoPlayer");
+      videoPlayer.pause();
+      videoPlayer.src("");
+      history.back();
+    }
+
+    window.addEventListener("popstate", () => {
+      document.getElementById("movieModal").style.display = "none";
+      document.getElementById("qualityPopup").style.display = "none";
+      document.getElementById("watchPopup").style.display = "none";
+      document.getElementById("liveTvPopup").style.display = "none";
+      document.getElementById("videoPopup").style.display = "none";
+      document.getElementById("watchIframe").src = "";
+      const videoPlayer = videojs("videoPlayer");
+      videoPlayer.pause();
+      videoPlayer.src("");
+    });
+
+    window.addEventListener("click", function(e) {
+      if (e.target.id === "movieModal") history.back();
+      if (e.target.id === "qualityPopup") history.back();
+      if (e.target.id === "watchPopup") history.back();
+      if (e.target.id === "liveTvPopup") history.back();
+      if (e.target.id === "videoPopup") closeVideoPopup();
+    });
+
+    function setupScrollObserver() {
+      const categorySection = document.querySelector('.category-container');
+      const movieContainer = document.querySelector('.movie-container');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.boundingClientRect.top >= 0) {
+            categorySection.classList.remove('hidden');
+          } else {
+            categorySection.classList.add('hidden');
+          }
+        });
+      }, { threshold: 0 });
+
+      observer.observe(movieContainer);
+
+      window.addEventListener('scroll', () => {
+        const movieTop = movieContainer.getBoundingClientRect().top;
+        if (movieTop >= 0) {
+          categorySection.classList.remove('hidden');
+        } else {
+          categorySection.classList.add('hidden');
+        }
+      });
+    }
+
+    fetchMoviesAndAds();
   </script>
 </body>
 </html>
+
+Ismai hum kya new function add kar shakta hai 
