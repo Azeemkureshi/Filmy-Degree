@@ -1,3 +1,10 @@
 {
-  "mainlink": "https://azeemkureshi.github.io/Filmy-Degree/"
+  "mainlink": "https://azeemkureshi.github.io/Filmy-Degree/",
+  
+  "updateInfo": {
+    "latestVersionCode": 2,
+    "latestVersionName": "1.1",
+    "updateUrl": "YAHAN_NAYE_APK_KA_DOWNLOAD_LINK_AYEGA",
+    "changelog": "Naye features add kiye gaye aur bugs fix kiye gaye."
+  }
 }
