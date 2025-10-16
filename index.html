@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="hi">
 <head>
   <meta charset="UTF-8" />
@@ -171,132 +172,149 @@
       background: white;
       color: black;
     }
-    /* Original Disable style */
-    .btn:disabled {
-        background-color: #555;
-        cursor: not-allowed;
-        color: #888;
-    }
-    .ad-iframe {
-      width: 100%;
-      max-width: 800px;
-      height: 80px;
-      border: none;
-      display: block;
-      margin: 10px 0;
-    }
-    .quality-content {
-      background: #1f1f1f;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      text-align: center;
-      width: 90%;
-      max-width: 300px;
-      animation: scaleIn 0.3s ease;
-    }
-    .watch-content {
-      background: #000;
-      padding: 0;
-      width: 100%;
-      max-width: 1200px;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease;
-    }
-    .iframe-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      padding-bottom: 56.25%;
-      height: 0;
-    }
-    iframe.watch-frame {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 125%;
-      border: none;
-      border-radius: 8px;
-    }
-    .download-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .download-buttons .btn {
-      border-radius: 10px;
-    }
-    .live-tv-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    .video-popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 10000;
-      justify-content: center;
-      align-items: center;
-    }
-    .video-popup-content {
-      background: #000;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 800px;
-      width: 90%;
-      height: 90vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .video-popup video {
-      width: 100%;
-      height: 100%;
-      border-radius: 8px;
-    }
-    .video-popup .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ff0000;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    @keyframes scaleIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .category-btn:nth-child(1) { background-color: #ff0000; }
-    .category-btn:nth-child(2) { background-color: #ffd700; }
-    .category-btn:nth-child(3) { background-color: #00ff00; }
-    .category-btn:nth-child(4) { background-color: #ffa500; }
-    .category-btn:nth-child(5) { background-color: #800080; }
+.share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: bold;
+  background: linear-gradient(45deg, #28a745, #218838);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+.share:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #218838, #1e7e34);
+}
+.btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    color: #888;
+}
+.ad-iframe {
+  width: 100%;
+  max-width: 800px;
+  height: 80px;
+  border: none;
+  display: block;
+  margin: 10px 0;
+}
+.quality-content {
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  text-align: center;
+  width: 90%;
+  max-width: 300px;
+  animation: scaleIn 0.3s ease;
+}
+.watch-content {
+  background: #000;
+  padding: 0;
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+iframe.watch-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 125%;
+  border: none;
+  border-radius: 8px;
+}
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.download-buttons .btn {
+  border-radius: 10px;
+}
+.live-tv-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.video-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+}
+.video-popup-content {
+  background: #000;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 800px;
+  width: 90%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.video-popup video {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+.video-popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.category-btn:nth-child(1) { background-color: #ff0000; }
+.category-btn:nth-child(2) { background-color: #2b1cff; }
+.category-btn:nth-child(3) { background-color: #FF9933; }
+.category-btn:nth-child(4) { background-color: #000080; }
+.category-btn:nth-child(5) { background-color: #138808; }
   </style>
 </head>
 <body>
@@ -306,11 +324,12 @@
   </div>
 
   <div class="category-container">
-    <button class="category-btn" onclick="openLiveTvPopup()">HOW TO DOWNLOAD</button>
-    <button class="category-btn" onclick="filterMovies('COMEDY')">COMEDY</button>
-    <button class="category-btn" onclick="filterMovies('DRAMA')">DRAMA</button>
-    <button class="category-btn" onclick="filterMovies('ROMA')">ROMA</button>
-    <button class="category-btn" onclick="filterMovies('2025')">2025</button>
+    <button class="category-btn" onclick="openLiveTvPopup()">𝗛𝗢𝗪 𝗧𝗢  𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗</button>
+    <!-- STEP 3: LIVE TV बटन का onclick बदला गया है -->
+    <button class="category-btn" onclick="openSecondWebsitePopup()">𝗟𝗶𝗩𝗘 𝗧𝗩</button>
+    <button class="category-btn" onclick="filterMovies('2025')">𝟮𝟬𝟮𝟱</button>
+    <button class="category-btn" onclick="filterMovies('2024')">𝟮𝟬𝟮𝟰</button>
+    <button class="category-btn" onclick="filterMovies('2023')">𝟮𝟬𝟮𝟯</button>
   </div>
 
   <div id="loading">Loading movies...</div>
@@ -333,7 +352,17 @@
         <button class="btn watch" onclick="openWatchPopup()">WATCH NOW</button>
         <button class="btn download" onclick="toggleQualityPopup()">DOWNLOAD</button>
       </div>
-    </div>
+
+  <div style="margin-top: 10px;">
+    <button class="btn share" onclick="shareMovie()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; vertical-align: middle;">
+        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+      </svg>
+      SHARE WITH FRIENDS
+    </button>
+  </div>
+
+</div>
   </div>
 
   <div id="qualityPopup" class="quality-modal">
@@ -356,6 +385,9 @@
   </div>
 
   <div id="liveTvPopup" class="live-tv-modal"></div>
+  
+  <!-- STEP 1: LIVE TV बटन के लिए नया पॉपअप कंटेनर -->
+  <div id="secondWebsitePopup" class="live-tv-modal"></div>
 
   <div id="videoPopup" class="video-popup">
     <div class="video-popup-content">
@@ -368,6 +400,7 @@
   </div>
 
   <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
+
   <script>
     const MOVIE_SHEET_ID = "1OlHQJyGezNU3FEu0VqHp-Z3zQrDc7xPqnY7po38d9pU";
     const AD_SHEET_ID = "1sAsrARX6-gauGu6OPkdiOBVoBlyIbwpBjbHxMm4c-OE";
@@ -475,24 +508,35 @@
       document.getElementById("movieModal").style.display = "flex";
       history.pushState({ modalOpen: true }, "");
     }
+    
+    function shareMovie() {
+      const shareText = "ENJOY UNLIMITED\n\nMOVIES AND LIVE SPORTS\n\nDownload now -> https://minihit.in";
 
-    // <<< SIRF IS FUNCTION KO UPDATE KIYA GAYA HAI >>>
+      if (navigator.share) {
+        navigator.share({
+          title: 'Unlimited Entertainment',
+          text: shareText,
+        })
+        .then(() => console.log('Successfully shared'))
+        .catch((error) => console.log('Error sharing:', error));
+      } else {
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert("शेयर का ऑप्शन उपलब्ध नहीं है, इसलिए मैसेज क्लिपबोर्ड पर कॉपी हो गया है!");
+        });
+      }
+    }
+
     function openWatchPopup() {
         const watchUrl = currentWatchUrl;
-
-        // Check if the link is empty or invalid
         if (!watchUrl || watchUrl.trim() === '' || watchUrl.trim() === '#') {
             alert("इस मूवी के लिए वॉच लिंक उपलब्ध नहीं है।");
             return;
         }
-
-        // Case 1: IMDb Link (e.g., https://www.imdb.com/title/tt12345/)
         if (watchUrl.includes("imdb.com/title/")) {
             const imdbTitleMatch = watchUrl.match(/title\/(tt\d+)/);
             if (imdbTitleMatch && imdbTitleMatch[1]) {
                 const imdbTitle = imdbTitleMatch[1];
-                const playerSrc = `https://himer365ery.com/play/${imdbTitle}`; // You can change this player
-                
+                const playerSrc = `https://himer365ery.com/play/${imdbTitle}`;
                 document.getElementById("watchIframe").src = playerSrc;
                 document.getElementById("watchPopup").style.display = "flex";
                 confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
@@ -501,18 +545,15 @@
                 alert("IMDb लिंक अमान्य है।");
             }
         } 
-        // Case 2: M3U8 Link (for video.js player)
         else if (watchUrl.toLowerCase().endsWith(".m3u8")) {
             const videoPlayer = videojs('videoPlayer');
             document.getElementById('videoSource').src = watchUrl;
             videoPlayer.src({ src: watchUrl, type: 'application/x-mpegURL' });
-            
             document.getElementById('videoPopup').style.display = 'flex';
             videoPlayer.load();
             videoPlayer.play();
             history.pushState({ videoOpen: true }, "");
         }
-        // Case 3: All other links (direct embed, google drive, etc.)
         else {
             document.getElementById("watchIframe").src = watchUrl;
             document.getElementById("watchPopup").style.display = "flex";
@@ -520,8 +561,6 @@
             history.pushState({ watchOpen: true }, "");
         }
     }
-    // <<< BADLAV YAHAN KHATAM HUA >>>
-
 
     function shortenAndSetLink(originalUrl, elementId) {
       if (originalUrl === "#") {
@@ -542,7 +581,7 @@
       const popup = document.getElementById("liveTvPopup");
       popup.innerHTML = "";
       const iframe = document.createElement("iframe");
-      iframe.src = "https://google.com";
+      iframe.src = "https://mini.allinonereborn.fun/jiotv-in/";
       iframe.style.width = "100%";
       iframe.style.height = "100%";
       iframe.style.border = "none";
@@ -552,6 +591,26 @@
       popup.style.display = "flex";
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       history.pushState({ liveTvOpen: true }, "");
+    }
+
+    // STEP 2: LIVE TV बटन के लिए नया फंक्शन
+    function openSecondWebsitePopup() {
+      const popup = document.getElementById("secondWebsitePopup"); // नए पॉपअप ID को टारगेट करें
+      popup.innerHTML = ""; // पुराना iframe हटाने के लिए
+      const iframe = document.createElement("iframe");
+      
+      // === अपनी दूसरी वेबसाइट का लिंक यहाँ डालें ===
+      iframe.src = "https://sflex07.fun/PC2/Play.php"; 
+      
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      iframe.allow = "fullscreen";
+      iframe.allowFullscreen = true;
+      popup.appendChild(iframe);
+      popup.style.display = "flex";
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      history.pushState({ secondWebsiteOpen: true }, ""); // बैक बटन के लिए नया state
     }
 
     function closeLiveTvPopup() {
@@ -569,11 +628,13 @@
       history.back();
     }
 
+    // STEP 4: बैक बटन दबाने और बाहर क्लिक करने पर नए पॉपअप को भी बंद करने का कोड
     window.addEventListener("popstate", () => {
       document.getElementById("movieModal").style.display = "none";
       document.getElementById("qualityPopup").style.display = "none";
       document.getElementById("watchPopup").style.display = "none";
       document.getElementById("liveTvPopup").style.display = "none";
+      document.getElementById("secondWebsitePopup").style.display = "none"; // नया पॉपअप बंद करें
       document.getElementById("videoPopup").style.display = "none";
       document.getElementById("watchIframe").src = "";
       const videoPlayer = videojs("videoPlayer");
@@ -586,6 +647,7 @@
       if (e.target.id === "qualityPopup") history.back();
       if (e.target.id === "watchPopup") history.back();
       if (e.target.id === "liveTvPopup") history.back();
+      if (e.target.id === "secondWebsitePopup") history.back(); // नया पॉपअप बंद करें
       if (e.target.id === "videoPopup") closeVideoPopup();
     });
 
@@ -614,5 +676,6 @@
 
     fetchMoviesAndAds();
   </script>
+
 </body>
 </html>
