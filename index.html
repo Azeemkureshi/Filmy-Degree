@@ -325,7 +325,6 @@ iframe.watch-frame {
 
   <div class="category-container">
     <button class="category-btn" onclick="openLiveTvPopup()">𝗛𝗢𝗪 𝗧𝗢  𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗</button>
-    <!-- STEP 3: LIVE TV बटन का onclick बदला गया है -->
     <button class="category-btn" onclick="openSecondWebsitePopup()">𝗟𝗶𝗩𝗘 𝗧𝗩</button>
     <button class="category-btn" onclick="filterMovies('2025')">𝟮𝟬𝟮𝟱</button>
     <button class="category-btn" onclick="filterMovies('2024')">𝟮𝟬𝟮𝟰</button>
@@ -386,7 +385,6 @@ iframe.watch-frame {
 
   <div id="liveTvPopup" class="live-tv-modal"></div>
   
-  <!-- STEP 1: LIVE TV बटन के लिए नया पॉपअप कंटेनर -->
   <div id="secondWebsitePopup" class="live-tv-modal"></div>
 
   <div id="videoPopup" class="video-popup">
@@ -509,22 +507,21 @@ iframe.watch-frame {
       history.pushState({ modalOpen: true }, "");
     }
     
+    // --- बदला हुआ फंक्शन यहाँ है ---
     function shareMovie() {
+      // 1. शेयर करने के लिए मैसेज बनाएँ
       const shareText = "ENJOY UNLIMITED\n\nMOVIES AND LIVE SPORTS\n\nDownload now -> https://minihit.in";
 
-      if (navigator.share) {
-        navigator.share({
-          title: 'Unlimited Entertainment',
-          text: shareText,
-        })
-        .then(() => console.log('Successfully shared'))
-        .catch((error) => console.log('Error sharing:', error));
-      } else {
-        navigator.clipboard.writeText(shareText).then(() => {
-          alert("शेयर का ऑप्शन उपलब्ध नहीं है, इसलिए मैसेज क्लिपबोर्ड पर कॉपी हो गया है!");
-        });
-      }
+      // 2. मैसेज को URL के लिए एन्कोड करें ताकि स्पेस और नई लाइन सही से काम करें
+      const encodedText = encodeURIComponent(shareText);
+
+      // 3. व्हाट्सएप शेयर का लिंक बनाएँ
+      const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+
+      // 4. लिंक को नए टैब में खोलें। यह मोबाइल पर सीधे व्हाट्सएप ऐप खोलेगा।
+      window.open(whatsappUrl, '_blank');
     }
+    // --- बदलाव खत्म ---
 
     function openWatchPopup() {
         const watchUrl = currentWatchUrl;
@@ -593,15 +590,11 @@ iframe.watch-frame {
       history.pushState({ liveTvOpen: true }, "");
     }
 
-    // STEP 2: LIVE TV बटन के लिए नया फंक्शन
     function openSecondWebsitePopup() {
-      const popup = document.getElementById("secondWebsitePopup"); // नए पॉपअप ID को टारगेट करें
-      popup.innerHTML = ""; // पुराना iframe हटाने के लिए
+      const popup = document.getElementById("secondWebsitePopup");
+      popup.innerHTML = "";
       const iframe = document.createElement("iframe");
-      
-      // === अपनी दूसरी वेबसाइट का लिंक यहाँ डालें ===
       iframe.src = "https://sflex07.fun/PC2/Play.php"; 
-      
       iframe.style.width = "100%";
       iframe.style.height = "100%";
       iframe.style.border = "none";
@@ -610,7 +603,7 @@ iframe.watch-frame {
       popup.appendChild(iframe);
       popup.style.display = "flex";
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      history.pushState({ secondWebsiteOpen: true }, ""); // बैक बटन के लिए नया state
+      history.pushState({ secondWebsiteOpen: true }, "");
     }
 
     function closeLiveTvPopup() {
@@ -628,13 +621,12 @@ iframe.watch-frame {
       history.back();
     }
 
-    // STEP 4: बैक बटन दबाने और बाहर क्लिक करने पर नए पॉपअप को भी बंद करने का कोड
     window.addEventListener("popstate", () => {
       document.getElementById("movieModal").style.display = "none";
       document.getElementById("qualityPopup").style.display = "none";
       document.getElementById("watchPopup").style.display = "none";
       document.getElementById("liveTvPopup").style.display = "none";
-      document.getElementById("secondWebsitePopup").style.display = "none"; // नया पॉपअप बंद करें
+      document.getElementById("secondWebsitePopup").style.display = "none";
       document.getElementById("videoPopup").style.display = "none";
       document.getElementById("watchIframe").src = "";
       const videoPlayer = videojs("videoPlayer");
@@ -647,7 +639,7 @@ iframe.watch-frame {
       if (e.target.id === "qualityPopup") history.back();
       if (e.target.id === "watchPopup") history.back();
       if (e.target.id === "liveTvPopup") history.back();
-      if (e.target.id === "secondWebsitePopup") history.back(); // नया पॉपअप बंद करें
+      if (e.target.id === "secondWebsitePopup") history.back();
       if (e.target.id === "videoPopup") closeVideoPopup();
     });
 
