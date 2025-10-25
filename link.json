@@ -1,10 +1,13 @@
 {
-  "Visibility": "VISIBLE",
-  "Title": "Test",
-  "Description": "Test ho gya",
-  "MainTextButton": "Update",
-  "Cancelable": "false",
-  "CancelButtonText": "Cancel",
-  "DownloadLink": "https://google.com",
-  "Version": "1.1"
+  "mainlink": "https://hdhub4u.pictures/",
+  "updateInfo": {
+    "Visibility": "VISIBLE",
+    "Title": "Test",
+    "Description": "Test ho gya",
+    "MainTextButton": "Update",
+    "Cancelable": "false",
+    "CancelButtonText": "Cancel",
+    "DownloadLink": "https://google.com",
+    "Version": "1.1"
+  }
 }
