@@ -3,7 +3,7 @@
   "Title": "Test",
   "Description": "Test Message",
   "MainTextButton": "Update",
-  "Cancelable": "true",
+  "Cancelable": "false",
   "CancelButtonText": "Cancel",
   "DownloadLink": "www.example.com",
   "Version": "2.0"
