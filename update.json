@@ -1,11 +1,9 @@
 {
+  "VersionCode": "2.0",
   "Visibility": "VISIBLE",
-  "Title": "Test",
-  "Description": "Test Message",
-  "MainTextButton": "Update",
-  "Cancelable": "true",
-  "CancelButtonText": "Cancel",
+  "Title": "New Update",
+  "Description": "Bug fixes and improvements.",
   "DownloadLink": "https://example.com/app.apk",
-  "Version": "2.1",
-  "VersionCode": 3
+  "MainTextButton": "Update Now",
+  "CancelButtonText": "Later"
 }
