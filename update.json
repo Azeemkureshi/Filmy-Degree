@@ -1,8 +1,8 @@
 {
-  "VersionCode": "2",
+  "VersionCode": 3,
   "Visibility": "VISIBLE",
-  "Title": "New Update",
-  "Description": "Bug fixes and improvements.",
+  "Title": "New Update Available",
+  "Description": "Performance improved and bugs fixed.",
   "DownloadLink": "https://example.com/app.apk",
   "MainTextButton": "Update Now",
   "CancelButtonText": "Later"
