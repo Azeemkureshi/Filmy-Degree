@@ -5,6 +5,7 @@
   "MainTextButton": "Update",
   "Cancelable": "true",
   "CancelButtonText": "Cancel",
-  "DownloadLink": "www.example.com",
-  "Version": "2.0"
+  "DownloadLink": "https://www.example.com",
+  "Version": "2.0",
+  "VersionCode": 2
 }
