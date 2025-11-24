@@ -1,8 +1,8 @@
 [
   {
-    "Maintenance": "true",
+    "Maintenance": "false",
     "Maintenance msg": "Application in maintenance mode🛠️",
-    "version": "1.0",
+    "version": "2.0",
     "update msg": "New update available!😃🚀",
     "link": "https://www.google.com"
   }
