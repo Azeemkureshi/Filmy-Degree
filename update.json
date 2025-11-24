@@ -1,9 +1,9 @@
-{
-  "VersionCode": 3,
-  "Visibility": "VISIBLE",
-  "Title": "New Update Available",
-  "Description": "Performance improved and bugs fixed.",
-  "DownloadLink": "https://example.com/app.apk",
-  "MainTextButton": "Update Now",
-  "CancelButtonText": "Later"
-}
+[
+  {
+    "Maintenance": "false",
+    "Maintenance msg": "Application in maintenance mode🛠️",
+    "version": "2.0",
+    "update msg": "New update available!😃🚀",
+    "link": "https://www.google.com"
+  }
+]
